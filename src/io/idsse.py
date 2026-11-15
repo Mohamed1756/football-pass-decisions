@@ -262,6 +262,55 @@ def _reception_point(
     return None
 
 
+@dataclass(frozen=True)
+class ReceptionWindow:
+    """Ball and receiver 1 s after reception, plus marking at receipt.
+
+    Slice 2 of gate 4: the touch-label inputs. end_frame is the
+    reception frame from `_reception_point`; plus1 reads frame
+    end_frame + 25 (IDSSE 25 Hz = 1 s). marking_dist_m is the nearest
+    other actor's distance to the receiver at the reception instant
+    (frozen at receipt, not advanced — the live advance needs t_ball
+    per pass, which the fit caller supplies; this stays a lookup).
+    Missing ball or receiver at either frame → None fields, caller
+    drops the row (same reception-conditioning as load_passes).
+    """
+
+    ball_at_receipt: Optional[PitchPoint]
+    receiver_at_receipt: Optional[PitchPoint]
+    ball_plus1: Optional[PitchPoint]
+    receiver_plus1: Optional[PitchPoint]
+    marking_dist_m: float
+
+
+def reception_window(
+    ball: Dict[int, Tuple[float, float]],
+    frames: Dict[int, Dict[str, Tuple[float, float]]],
+    end_frame: int,
+    target_id: str,
+) -> ReceptionWindow:
+    """1 s touch window for one reception. Pure lookup, no fitting."""
+    b0 = ball.get(end_frame)
+    r0 = frames.get(end_frame, {}).get(target_id)
+    b1 = ball.get(end_frame + 25)
+    r1 = frames.get(end_frame + 25, {}).get(target_id)
+    marking = math.inf
+    if r0 is not None:
+        for pid, pos in frames.get(end_frame, {}).items():
+            if pid == target_id:
+                continue
+            d = math.dist(pos, r0)
+            if d < marking:
+                marking = d
+    return ReceptionWindow(
+        ball_at_receipt=PitchPoint(*b0) if b0 else None,
+        receiver_at_receipt=PitchPoint(*r0) if r0 else None,
+        ball_plus1=PitchPoint(*b1) if b1 else None,
+        receiver_plus1=PitchPoint(*r1) if r1 else None,
+        marking_dist_m=round(marking, 2) if math.isfinite(marking) else 99.0,
+    )
+
+
 def load_passes(
     tracking_path: str, events_path: str, match_path: str
 ) -> List[Tuple[IDSSEPass, List[PressingActor]]]:

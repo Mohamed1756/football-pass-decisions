@@ -80,6 +80,31 @@ def idsse_files(tmp_path):
     return str(track), str(events), str(match)
 
 
+def test_reception_window_reads_plus1_and_marking():
+    from src.io.idsse import reception_window
+    from src.models.retention.mechanism import label_touch
+
+    frames = {
+        200: {"P2": (60.0, 34.0), "P9": (63.0, 34.0)},
+        225: {"P2": (61.0, 34.0), "P9": (63.5, 34.0)},
+    }
+    ball = {200: (60.0, 34.0), 225: (61.2, 34.0)}
+    w = reception_window(ball, frames, 200, "P2")
+    assert w.ball_at_receipt is not None and w.receiver_plus1 is not None
+    assert w.marking_dist_m == 3.0  # frozen at receipt, P9 3 m away
+    assert label_touch(w.ball_plus1, w.receiver_plus1) is True  # 0.2 m apart
+
+
+def test_reception_window_missing_plus1_is_none():
+    from src.io.idsse import reception_window
+
+    frames = {200: {"P2": (60.0, 34.0)}}
+    ball = {200: (60.0, 34.0)}
+    w = reception_window(ball, frames, 200, "P2")
+    assert w.ball_plus1 is None and w.receiver_plus1 is None
+    assert w.marking_dist_m == 99.0  # nobody else on frame
+
+
 def test_roster_maps_sides(idsse_files):
     _, events, match = idsse_files
     length, width, teams, names = _load_roster(match)
