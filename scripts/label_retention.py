@@ -70,11 +70,19 @@ def main() -> None:
             from src.models.retention.mechanism import label_touch
 
             rows.append(
-                (
-                    ready.post_cushion_s(res.margin_s),
-                    w.marking_dist_m,
-                    label_touch(w.ball_plus1, w.receiver_plus1),
-                )
+                {
+                    "match": m,
+                    "pass_idx": p.start_frame,
+                    "target_id": p.target_id,
+                    "passer": p.passer,
+                    "complete": p.complete,
+                    "margin_s": res.margin_s,
+                    "t_ball_s": res.t_ball_s,
+                    "t_press_s": res.t_press_s,
+                    "cushion_s": ready.post_cushion_s(res.margin_s),
+                    "marking_dist_m": w.marking_dist_m,
+                    "controlled": label_touch(w.ball_plus1, w.receiver_plus1),
+                }
             )
             kept += 1
         print(f"{m}: {kept} labeled")

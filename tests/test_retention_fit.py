@@ -42,19 +42,29 @@ DECILE_FIT = (0.318, 0.407, 0.451, 0.484, 0.515, 0.543, 0.572, 0.614, 0.664, 0.7
 
 def _nll(rows, fn) -> float:
     s = 0.0
-    for c, _, y in rows:
+    for r in rows:
+        c, y = _row(r)
         p = min(max(fn(c), 1e-6), 1 - 1e-6)
         s -= y * math.log(p) + (1 - y) * math.log(1 - p)
     return s
 
 
+def _row(r):
+    """Pool rows are dicts with join keys; (cushion, controlled) is the fit pair."""
+    if isinstance(r, dict):
+        return r["cushion_s"], r["controlled"]
+    return r[0], r[2]  # legacy tuple rows
+
+
 def test_winner_beats_null_and_assumed():
     rows = pickle.load(open(RETENTION_LABELED_PATH, "rb"))
     assert len(rows) == POOL_N
-    assert sum(y for _, _, y in rows) == POOL_CONTROLS
-    null_rows = sum(y for _, _, y in rows) / len(rows)
+    pairs = [_row(r) for r in rows]
+    assert sum(y for _, y in pairs) == POOL_CONTROLS
+    null_rows = sum(y for _, y in pairs) / len(pairs)
     null = -sum(
-        y * math.log(null_rows) + (1 - y) * math.log(1 - null_rows) for _, _, y in rows
+        y * math.log(null_rows) + (1 - y) * math.log(1 - null_rows)
+        for _, y in pairs
     )
     assert abs(null - NULL_NLL) < 1.0
     assert abs(_nll(rows, fitted_control_prob) - FIT_NLL) < 1.0
@@ -68,10 +78,11 @@ def test_control_by_decile_pins_curve():
     import numpy as np
 
     rows = pickle.load(open(RETENTION_LABELED_PATH, "rb"))
-    cs = sorted(c for c, _, _ in rows)
+    pairs = [_row(r) for r in rows]
+    cs = sorted(c for c, _ in pairs)
     q = np.quantile(cs, [i / 10 for i in range(1, 10)])
     bins = collections.defaultdict(list)
-    for c, _, y in rows:
+    for c, y in pairs:
         d = sum(1 for e in q if c > e) + 1
         bins[d].append((c, y))
     assert len(bins) == 10
