@@ -29,8 +29,9 @@ Both sides race to the ball-to-runner intercept.
 - Inputs carry distrust: `gate_tracking_velocity` zeroes >8.5 m/s or flagged
   capped vectors and reports the gate. Invalid opponents are skipped, not scored.
 - Receipt: 0.45 s first touch plus turn latency (0.25 s floor when unknown).
-  `post_cushion_s` subtracts it from margin; `retention_prob` maps the cushion
-  through a logistic (steepness 15, 50% at 0.15 s).
+  `post_cushion_s` subtracts it from margin; gate 4 fits the
+  cushion→control curve (`fitted_control_prob`), replacing the old
+  assumed logistic.
 
 ## Deleted as unverifiable
 
@@ -158,9 +159,10 @@ Both sides race to the ball-to-runner intercept.
   margins in `data/pooled/`); `pass_speed_ms` and `live_pressers` stay
   tested mechanisms awaiting a tracking-data refit.
 - Unknown-facing at 360 scale means every presser pays the floor.
-- `outlet_value` (retention times forward progress) is a descriptive
-  reordering aid: rank-0-by-value is the safest progressive ball, not a
-  fitted outcome. Individual value-added fails as a trait on IDSSE
+- `outlet_value_fitted` (fitted control times forward progress):
+  rank-0-by-value is the safest progressive ball under the gate-4 fit.
+  The old assumed-logistic `outlet_value` is cut, not kept.
+- Individual value-added fails as a trait on IDSSE
   (51 passers, n>=5, full-pitch choice sets averaging 8.7 outlets):
   rank-0 choice 0.00-0.25, value-choice vs completion corr 0.02.
   Passers complete 60-100% while almost never taking the model's safest

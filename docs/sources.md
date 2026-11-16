@@ -46,3 +46,52 @@ New dataset or paper → new row here with access, licence, gates, and the
 take/don't-take split — in the same commit that first uses it. No
 source cited in two places with two wordings; gate notes cite the claim,
 this file cites the source.
+
+## Admission bar (integrity over coverage)
+
+Scarce data tempts loose cites. Every source must clear all four before
+it lands in the tables above:
+
+1. **Access.** Open, licensed, or bought — linked, not "personal
+   communication" or paywalled-without-copy. A reader with no contacts
+   reaches the same file.
+2. **Method visible.** Data: collection method stated (device, fps,
+   sample). Papers: n, population, and analysis stated (median error
+   with n beats a bare claim). Conference/workshop is fine; method
+   opacity is not.
+3. **Take narrow.** Cite the one number or field used, with its error
+   where given (e.g. 27.7° median error, n=EPTS youth games). The
+   take/don't-take split is mandatory — a source with no stated
+   boundary is a source half-read.
+4. **Falsifiable here.** State what banked-pool result would weaken it
+   (e.g. "logistic beats exponential on labeled cushions → Spearman
+   shape rejected for gate 4"). A source that cannot lose against our
+   data is decoration.
+
+Blog posts, vendor pages, and press releases never enter the tables —
+at most a link in the gate note as context. Preprints are admissible
+only with method + n visible (arXiv is a shelf, not a stamp).
+
+## Citation weight (published buys a hearing, our data buys belief)
+
+Clearing the bar admits a source to the tables. Weight decides what it
+is allowed to change. Three tiers, and a source moves up only by
+winning against banked data — never by citation alone:
+
+1. **Context.** Read it, link it, take nothing. Shapes the question,
+   never the constant. Paywalled-without-copy, undisclosed n, press
+   releases live here permanently.
+2. **Prior.** Take the number, keep our null. Method + n + error bars
+   present (e.g. Spearman λ = 4.3 ± 1.1/s; Arbués 27.7° median vs
+   EPTS). The number enters as the thing our fit has to beat, error
+   carried alongside, never rounded away.
+3. **Ground truth.** Replaces our value. Only on replication against a
+   banked pool: the assumed curve loses to the fitted one on labeled
+   cushions, the pose error holds on our 2-match sample. Tier 3 is
+   awarded by contest outcome, recorded in the gate note with the
+   pool, n, and margin of victory.
+
+Failure mode this prevents: laundering someone's fitted constant into
+`arrival_constants.py` because it appeared in print. Every constant
+there carries "fitted here on pool X" or "assumed, null to beat" —
+never "Smith et al. report Y" as terminal justification.

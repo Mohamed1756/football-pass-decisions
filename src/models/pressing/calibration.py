@@ -17,11 +17,8 @@ with chosen rank (0.024 at rank 0 -> ~0.23 at rank 6+, rank 7 pooled).
 from __future__ import annotations
 
 import math
-import sys
 from dataclasses import dataclass
 from typing import List, Sequence, Tuple
-
-from src.core.geometry import PITCH_LENGTH_M
 
 # Decile upper edges (seconds) from the WC2022 fit, fitted values.
 # Boundaries are descriptive of the calibration sample, not physics.
@@ -126,35 +123,3 @@ def rank_risk(rank: int) -> float:
     if rank < 0:
         raise ValueError(f"rank must be >= 0, got {rank}")
     return RANK_INCOMPLETION_RATE[min(rank, 7)]
-
-
-def outlet_value(
-    retention_prob: float, intercept_x_m: float, attack_sign: float = 1.0
-) -> float:
-    """Safety-times-upside for one outlet: retention probability at the
-    intercept times forward progress (attack-direction x over pitch length).
-    intercept_x_m is where the ball is received in corner-origin meters,
-    not where the target stands at decision time: on tracking data use
-    the reception point, on frozen shape the computed intercept.
-    attack_sign=+1 attacks left-to-right (canonical), -1 the reverse:
-    callers with unnormalized ends (Metrica keeps raw period orientation)
-    pass -1 for second-half attacks instead of silently scoring the wrong
-    half. Inputs outside [0, pitch length] are a caller error, scored at
-    the boundary with a stderr warning (off-pitch or behind-goal x can
-    only come from a bad intercept or flipped ends). attack_sign != +/-1
-    raises ValueError.
-    Rank-0-by-margin is safest; rank-0-by-value is the safest
-    progressive ball. Descriptive reordering aid, not a fitted
-    outcome model.
-    """
-    if attack_sign not in (1.0, -1.0):
-        raise ValueError(f"attack_sign must be +1 or -1, got {attack_sign}")
-    x = intercept_x_m if attack_sign == 1.0 else PITCH_LENGTH_M - intercept_x_m
-    if not 0.0 <= x <= PITCH_LENGTH_M:
-        print(
-            f"outlet_value: intercept_x_m={intercept_x_m} outside "
-            f"[0, {PITCH_LENGTH_M}]: clipped to boundary",
-            file=sys.stderr,
-        )
-    progress = min(1.0, max(0.0, x / PITCH_LENGTH_M))
-    return round(retention_prob * progress, 4)

@@ -105,25 +105,3 @@ def test_hospital_pass_margin_math():
 
     ready = receiver_readiness(rec, PitchPoint(x=10.0, y=34.0))
     assert ready.post_cushion_s(res.margin_s) < ready.reception_latency_s
-
-
-def test_retention_probability_calibration():
-    from src.physics.arrival_constants import RETENTION_CRITICAL_CUSHION_S
-
-    ready = receiver_readiness(
-        _actor(4, 80.0, 30.0, facing=0.0), PitchPoint(x=100.0, y=29.0)
-    )
-
-    # Inflection point at critical cushion gives exactly 50%
-    margin_at_inflection = ready.reception_latency_s + RETENTION_CRITICAL_CUSHION_S
-    assert ready.retention_prob(margin_at_inflection) == pytest.approx(0.50, abs=1e-3)
-
-    # Monotonicity and C^1 continuity across the physical cushion range
-    steps = [round(-0.20 + i * 0.01, 3) for i in range(81)]  # [-0.20, +0.60]
-    vals = [ready.retention_prob(ready.reception_latency_s + t) for t in steps]
-
-    for i in range(len(vals) - 1):
-        assert vals[i] < vals[i + 1], "Retention must be strictly monotonic"
-        delta = abs(vals[i + 1] - vals[i])
-        assert delta < 0.05, f"Discontinuity detected: step jump of {delta:.4f}"
-        assert 0.0 < vals[i] < 1.0, "Retention must stay strictly in (0, 1)"

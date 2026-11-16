@@ -11,12 +11,14 @@ import math
 from dataclasses import dataclass
 
 from src.core.geometry import PitchPoint
+from src.models.pressing.arrival import ArrivalResult
+from src.models.pressing.readiness import ReadinessResult
 
-# Placeholder population mean: uniform-over-angles expected turn on the
-# hip-pivot curve (0.39 s, computed not asserted). ASSUMED until pose
-# data replaces it. Floor 0 rejected: prices ignorance as ideal
-# preparation.
-UNKNOWN_FACING_TURN_S: float = 0.39
+# Deleted as unverifiable (fit voted direct curve, NLL 782.6):
+# touch_need_s, disrupt_time_s, RetentionMargin, retention_margin_s —
+# the race machinery the composition bypasses. Cut, not kept: the
+# sketch's deleted-alternatives list owns them now.
+
 
 # Touch-label rule: ball within this radius of the receiver at
 # receipt+1 s counts as controlled. Cited, not tuned: 2 m reception
@@ -25,44 +27,40 @@ UNKNOWN_FACING_TURN_S: float = 0.39
 CONTROL_RADIUS_M: float = 1.5
 
 
-def touch_need_s(turn_latency_s: float, facing_known: bool) -> float:
-    """Seconds to control: 0.45 s touch plus turn cost.
-
-    Unknown facing takes the placeholder mean, not floor 0 (see module
-    docstring). The 0.25 s engagement floor stays on the presser's
-    clock — charged once, upstream.
-    """
-    from src.physics.arrival_constants import RECEIVER_FIRST_TOUCH_LATENCY_S
-
-    turn = turn_latency_s if facing_known else UNKNOWN_FACING_TURN_S
-    return round(RECEIVER_FIRST_TOUCH_LATENCY_S + turn, 3)
-
-
-def disrupt_time_s(marking_dist_m: float, closing_speed_ms: float) -> float:
-    """Presser seconds to contest: distance over closing speed.
-
-    Sprint-cap fallback when no velocity: callers pass
-    PRESSER_SPRINT_MAX_SPEED_MS instead of zero so stationary tracking
-    reads as worst-case close, not infinite time.
-    """
-    if closing_speed_ms <= 0.0:
-        return math.inf
-    return round(marking_dist_m / closing_speed_ms, 3)
-
-
 @dataclass(frozen=True)
-class RetentionMargin:
-    touch_need_s: float
-    t_disrupt_s: float
+class RetentionGivenArrival:
     margin_s: float
+    cushion_s: float
+    marking_dist_m: float
+    control_prob: float
 
 
-def retention_margin_s(touch_need: float, t_disrupt: float) -> RetentionMargin:
-    """Second race, same shape as arrival: control holds iff margin > 0."""
-    return RetentionMargin(
-        touch_need_s=touch_need,
-        t_disrupt_s=t_disrupt,
-        margin_s=round(t_disrupt - touch_need, 3),
+def retention_given_arrival(
+    arrival: ArrivalResult,
+    readiness: ReadinessResult,
+    marking_dist_m: float,
+) -> RetentionGivenArrival:
+    """Gate 3 → gate 4: arrival outputs in, control probability out.
+
+    Takes the dataclasses, not floats: cushion comes from
+    readiness.post_cushion_s (single subtraction, single owner).
+    Unscorable arrival (-99) stays unscorable: the fit never sees it,
+    control reads 0.0, never a fitted value. Control follows the
+    winner curve (fitted_control_prob); params live there, not here.
+    """
+    if arrival.margin_s <= -99.0:
+        return RetentionGivenArrival(
+            margin_s=arrival.margin_s,
+            cushion_s=arrival.margin_s,
+            marking_dist_m=marking_dist_m,
+            control_prob=0.0,
+        )
+    cushion = readiness.post_cushion_s(arrival.margin_s)
+    return RetentionGivenArrival(
+        margin_s=arrival.margin_s,
+        cushion_s=cushion,
+        marking_dist_m=marking_dist_m,
+        control_prob=fitted_control_prob(cushion),
     )
 
 
@@ -78,18 +76,22 @@ def label_touch(ball_plus1: PitchPoint, receiver_plus1: PitchPoint) -> bool:
     )
 
 
-def touch_curve_logistic(cushion_s: float, steepness: float, midpoint: float) -> float:
-    """Logistic touch curve. Params as args: contest harness, not a pick.
+def touch_curve_exp(cushion_s: float, lam: float = 0.40, c0: float = -1.50) -> float:
+    """Shifted exponential: P = 1 - e^(-lam (t - c0)), floored at 0 below c0.
 
-    Current assumed values (steepness 15, midpoint 0.15) are the null
-    to beat, not constants — see retention.md.
+    Defaults are the winner (pinned in test_retention_fit); pass
+    lam=4.3, c0=0.0 for the Spearman 2017 EPL form as challenger.
     """
-    return round(1.0 / (1.0 + math.exp(-steepness * (cushion_s - midpoint))), 4)
+    if cushion_s <= c0:
+        return 0.0
+    return round(1.0 - math.exp(-lam * (cushion_s - c0)), 4)
 
 
-def touch_curve_exp(cushion_s: float, lam: float) -> float:
-    """Exponential touch curve: P = 1 - e^(-lam t). Spearman 2017 form.
+# Winner constants (pinned in test_retention_fit on 1,160 labeled rows).
+FIT_LAM: float = 0.40
+FIT_C0: float = -1.50
 
-    Params as args, same contest. Spearman fit lam = 4.3/s on EPL.
-    """
-    return round(1.0 - math.exp(-lam * cushion_s), 4)
+
+def fitted_control_prob(cushion_s: float) -> float:
+    """Winner curve. Single home: tests import this, never redefine."""
+    return touch_curve_exp(cushion_s, FIT_LAM, FIT_C0)

@@ -7,9 +7,8 @@ unknown; unknown notes, it does not discount through an unmeasured prior.
 Ordering instrument, not a clock: every latency here is an assumed profile
 (0.45 s touch, hip-pivot curve, 0.25 s floor — arrival_constants.py),
 never a fitted time. post_cushion_s preserves margin ordering exactly
-(one shared subtraction); retention_prob is a monotone diagnostic mapping
-for reordering aids like outlet_value — never a calibrated probability.
-Do not threshold or bet on its absolute value.
+(one shared subtraction); the fitted control curve lives in
+retention.fitted_control_prob, not here.
 """
 
 from __future__ import annotations
@@ -24,8 +23,6 @@ from src.physics.biomechanics import compute_hip_pivot_latency
 from src.physics.arrival_constants import (
     HUMAN_REACTION_FLOOR_S,
     RECEIVER_FIRST_TOUCH_LATENCY_S,
-    RETENTION_CRITICAL_CUSHION_S,
-    RETENTION_LOGISTIC_STEEPNESS_K,
 )
 
 
@@ -39,28 +36,6 @@ class ReadinessResult:
 
     def post_cushion_s(self, arrival_margin_s: float) -> float:
         return round(arrival_margin_s - self.reception_latency_s, 3)
-
-    def retention_prob(self, arrival_margin_s: float) -> float:
-        """Monotone diagnostic mapping of post-receipt cushion to (0, 1).
-
-        Same assumed logistic as ever (steepness 15, 50% at 0.15 s —
-        arrival_constants.py, not a fit). Preserves cushion ordering, so
-        it can reorder outlets; its absolute value is uncalibrated and
-        inherits the frozen-seconds inflation of its input. Never rank
-        passers, never threshold decisions on it.
-        """
-        cushion = self.post_cushion_s(arrival_margin_s)
-        return round(
-            1.0
-            / (
-                1.0
-                + math.exp(
-                    -RETENTION_LOGISTIC_STEEPNESS_K
-                    * (cushion - RETENTION_CRITICAL_CUSHION_S)
-                )
-            ),
-            4,
-        )
 
 
 def resolve_facing(actor: PressingActor) -> Tuple[Optional[float], str]:
@@ -80,6 +55,10 @@ def receiver_readiness(
     """Time cost of taking the ball on the front foot: 0.45 s first touch
     plus hip-turn latency off measured pose, 0.25 s floor when unknown.
     facing_source/note are provenance for calibration, not scored inputs.
+    Note: gate 4 sketches a 0.39 s placeholder mean for unknown-facing
+    receiver latency in its own touch model — that lives in gate 4
+    code, never here: this function's outputs feed fitted gate-3
+    edges (DECILE_EDGES_S), which describe 0.25-floor cushions.
     """
     facing, source = resolve_facing(receiver)
     if facing is None:

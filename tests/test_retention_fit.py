@@ -1,19 +1,29 @@
 """Pinned retention fit: first contest on banked labels, exact counts.
 
 Gate 4 slice 3 result. The assumed logistic (k=15, mid=0.15) is not a
-fit — it loses to the null by 2294 NLL. The winner is a shifted
+fit — it loses to the null by 2412 NLL. The winner is a shifted
 exponential in cushion; marking adds a small residual gain.
+Winner params live in mechanism (single home); this file pins NLLs.
 """
 
 import math
 import pickle
 
+from src.models.retention.mechanism import fitted_control_prob
+
+
+def _touch_curve_logistic_null(cushion_s: float) -> float:
+    """Assumed logistic (k=15, mid=0.15): the null the winner beat.
+
+    Lives here, not in mechanism: its only caller is the assumed-NLL
+    pin below. Production curve is fitted_control_prob.
+    """
+    return round(1.0 / (1.0 + math.exp(-15.0 * (cushion_s - 0.15))), 4)
+
+
 RETENTION_LABELED_PATH = "data/pooled/idsse_retention_labeled.pkl"
 
-# Winner: shifted exponential, cushion only.
-# P(control) = 1 - exp(-lam * (cushion - c0)), floored at 0 below c0.
-FIT_LAM: float = 0.40
-FIT_C0: float = -1.50
+# Winner NLL pinned here; curve lives in mechanism.fitted_control_prob.
 FIT_NLL: float = 782.6
 
 # Null (intercept-only) and assumed-curve NLL on the same 1,160 rows.
@@ -24,12 +34,10 @@ ASSUMED_NLL: float = 3205.1
 POOL_N: int = 1160
 POOL_CONTROLS: int = 659
 
-
-def fitted_control_prob(cushion_s: float) -> float:
-    """Winner curve. Below c0 the ball is already lost: 0, not small."""
-    if cushion_s <= FIT_C0:
-        return 0.0
-    return round(1.0 - math.exp(-FIT_LAM * (cushion_s - FIT_C0)), 4)
+# Control by pooled cushion-decile (own tenths): observed vs fitted mean.
+# Monotone rising to q9, q10 dip on n=115 — noise, same tail pattern as gate 3.
+DECILE_OBS = (0.431, 0.431, 0.483, 0.487, 0.578, 0.638, 0.619, 0.640, 0.707, 0.670)
+DECILE_FIT = (0.318, 0.407, 0.451, 0.484, 0.515, 0.543, 0.572, 0.614, 0.664, 0.755)
 
 
 def _nll(rows, fn) -> float:
@@ -50,8 +58,25 @@ def test_winner_beats_null_and_assumed():
     )
     assert abs(null - NULL_NLL) < 1.0
     assert abs(_nll(rows, fitted_control_prob) - FIT_NLL) < 1.0
-    from src.models.retention.mechanism import touch_curve_logistic
-
-    assumed = _nll(rows, lambda c: touch_curve_logistic(c, 15.0, 0.15))
-    assert abs(assumed - ASSUMED_NLL) < 5.0
+    assert abs(_nll(rows, _touch_curve_logistic_null) - ASSUMED_NLL) < 5.0
     assert FIT_NLL < NULL_NLL < ASSUMED_NLL
+
+
+def test_control_by_decile_pins_curve():
+    import collections
+
+    import numpy as np
+
+    rows = pickle.load(open(RETENTION_LABELED_PATH, "rb"))
+    cs = sorted(c for c, _, _ in rows)
+    q = np.quantile(cs, [i / 10 for i in range(1, 10)])
+    bins = collections.defaultdict(list)
+    for c, _, y in rows:
+        d = sum(1 for e in q if c > e) + 1
+        bins[d].append((c, y))
+    assert len(bins) == 10
+    for d in range(1, 11):
+        obs = sum(y for _, y in bins[d]) / len(bins[d])
+        pred = sum(fitted_control_prob(c) for c, _ in bins[d]) / len(bins[d])
+        assert abs(obs - DECILE_OBS[d - 1]) < 0.005
+        assert abs(pred - DECILE_FIT[d - 1]) < 0.005
