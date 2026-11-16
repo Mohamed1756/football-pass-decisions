@@ -39,6 +39,10 @@ derivation.
   WC2022 360. Same question family, learned completion model vs our
   arrival cushion; low passer ICC (~0.03–0.04) corroborates the
   passer-trait null without confirming it.
+- Spearman et al. 2017, gate-4 role: exponential shape prior (λ=4.3/s
+  EPL). Contested the curve contest as the cushion-only challenger;
+  lost to the shifted exponential (data demanded c0=−1.50). Cited as
+  prior (tier 2), beaten on banked labels — see retention.md.
 
 ## Adding a source (gate 4+ rule)
 

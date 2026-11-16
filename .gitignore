@@ -1,7 +1,6 @@
-# Private multi-month roadmap + unfinished gate notes — never publish, never push.
+# Private multi-month roadmap — never publish, never push.
 # Un-ignore a gate note only when its work is done and reviewed (arrival.md is the model).
 roadmap.md
-retention.md
 
 # ==============================================================================
 # ZERO-LEAK REPOSITORY PROTECTION (.gitignore)
