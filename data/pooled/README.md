@@ -22,7 +22,7 @@ rule that bins everything (WC2022 edges) is the literal
 | `idsse_measured_live.pkl` | 673 (margin, outcome) | First-3-matches cut cited in earlier drafts |
 | `idsse_pooled7.pkl` | 631 (margin, outcome) | Same, alternate cut; kept for audit |
 | `value_choice_by_passer.pkl` | 124 passers: name → [n, rank0_choices, value_choices, completions, total_outlets] (51 with n≥5 drive the null: rank-0 choice 0.00–0.25, completion 0.60–1.00, value/completion corr 0.02) | Value-added null |
-| `idsse_retention_labeled.pkl` | 1,160 (cushion, marking, controlled) tuples: 659 controls, banked by `scripts/label_retention.py` from 7 raw matches (HuggingFace `pysport/idsse-data`, re-downloadable — raw not vendored). Next re-bank writes dict rows with join keys (match, target, passer, margin); the fit test already accepts both schemas | Gate-4 fit: shifted exp wins (NLL 782.6 vs null 793.3, assumed 3205.1) |
+| `idsse_retention_labeled.pkl` | 1,160 dict rows (match, target, margin, cushion, marking, controlled, 3 deltas): 659 controls, all rows with full +3 s windows; banked by `scripts/label_retention.py` from 7 raw matches (HuggingFace `pysport/idsse-data`, re-downloadable) | Gates 4–5: shifted exp wins (NLL 782.6 vs null 793.3, assumed 3205.1); structure means press −0.83 / open +0.13 / compact −0.72 |
 
 Superseded cuts are marked, not deleted: early notes cite their numbers.
 

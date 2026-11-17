@@ -3,7 +3,7 @@
 Gate 3 x gate 4 rendered as a surface. Same grid loop as risk_surface,
 but per cell the composition runs arrival -> readiness -> fitted
 control curve, and value multiplies control by forward progress (same
-progress term as outlet_value). Marking is carried on the cell, not
+progress term as the old outlet_value, cut with the assumed curve).
 scored: the bivariate discount buys dNLL 1.2 on 1,160 rows — real but
 small, and wiring it now would pretend a fitted joint form exists.
 Revisit when the marking term earns its parameters.
@@ -23,7 +23,10 @@ from src.models.pressing.arrival import arrival_margin
 from src.models.pressing.calibration import decile_risk, margin_decile
 from src.models.pressing.readiness import receiver_readiness
 from src.models.pressing.types import PressingActor
-from src.models.retention.mechanism import retention_given_arrival
+from src.models.retention.mechanism import (
+    loosen_given_control,
+    retention_given_arrival,
+)
 
 
 @dataclass(frozen=True)
@@ -34,18 +37,24 @@ class ValueCell:
     risk: Optional[float]
     control_prob: float
     marking_dist_m: float  # frozen at cell, not the fit covariate
+    loosen_prob: float  # P(pass loosens structure | control, zone); 0.5 = unmodeled
     value: float
 
 
 def outlet_value_fitted(
-    control_prob: float, intercept_x_m: float, attack_sign: float = 1.0
+    control_prob: float,
+    intercept_x_m: float,
+    attack_sign: float = 1.0,
+    loosen_prob: float = 0.5,
 ) -> float:
     """Safety-times-upside with the fitted control curve, not the assumed one.
 
-    Same progress term as outlet_value; the probability comes from
-    retention_given_arrival instead of retention_prob. Separate function
-    so the assumed logistic cannot leak back in. attack_sign and the
-    stderr clip warning follow outlet_value exactly.
+    value = control x progress x loosen: the joint of arriving, sticking,
+    and breaking shape, assuming independence until gate 5 fits the joint
+    form (same null-to-beat pattern as retention's multiplicative start).
+    loosen_prob defaults to 0.5 (unmodeled); the value surface passes the
+    fitted zone rate via loosen_given_control. attack_sign and the
+    stderr clip warning follow the old (cut) outlet_value contract.
     """
     if attack_sign not in (1.0, -1.0):
         raise ValueError(f"attack_sign must be +1 or -1, got {attack_sign}")
@@ -57,7 +66,7 @@ def outlet_value_fitted(
             file=sys.stderr,
         )
     progress = min(1.0, max(0.0, x / PITCH_LENGTH_M))
-    return round(control_prob * progress, 4)
+    return round(control_prob * progress * loosen_prob, 4)
 
 
 def value_surface(
@@ -71,9 +80,12 @@ def value_surface(
 
     Hypothetical receiver stands static at each cell center; pressers run
     the frozen snapshot. Risk follows decile_risk(pace_k); control
-    follows the fitted exponential via retention_given_arrival; value is
-    control x progress. Marking is frozen at the cell (no live advance
-    on a hypothetical receiver) and carried for display.
+    follows the fitted exponential via retention_given_arrival; loosen
+    follows the gate-5 zone table via loosen_given_control (controlled
+    assumed: a hypothetical receiver is scored as if it controls —
+    value is P(arrival) x P(control) x P(loosen | control), the joint
+    under independence until gate 5 fits the joint form). Marking is
+    frozen at the cell and carried for display.
     """
     cells: List[ValueCell] = []
     tid = 0
@@ -93,6 +105,7 @@ def value_surface(
                         risk=None,
                         control_prob=0.0,
                         marking_dist_m=99.0,
+                        loosen_prob=0.0,
                         value=0.0,
                     )
                 )
@@ -100,6 +113,8 @@ def value_surface(
             dec = margin_decile(res.margin_s)
             ready = receiver_readiness(probe, passer)
             comp = retention_given_arrival(res, ready, res.marking_dist_m)
+            zone = "def" if x < 35.0 else ("mid" if x < 70.0 else "att")
+            loosen = loosen_given_control(zone, True)
             cells.append(
                 ValueCell(
                     x_m=x,
@@ -108,7 +123,8 @@ def value_surface(
                     risk=decile_risk(dec, pace_k),
                     control_prob=comp.control_prob,
                     marking_dist_m=res.marking_dist_m,
-                    value=outlet_value_fitted(comp.control_prob, x),
+                    loosen_prob=loosen,
+                    value=outlet_value_fitted(comp.control_prob, x, loosen_prob=loosen),
                 )
             )
     return cells

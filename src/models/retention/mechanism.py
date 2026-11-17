@@ -1,8 +1,8 @@
-"""Retention mechanism: touch_need vs t_disrupt, clocked from reception.
+"""Retention mechanism: control given arrival, fitted on 1,160 labels.
 
-Gate 4 slice 1: pure functions on synthetic values only. No loader
-changes, no fit, no banked pools. The touch label rule lives here so
-slice 3 applies it unchanged to the 1,160 measured receptions.
+Single home for the winner curve (fitted_control_prob), the gate-3→4
+composition (retention_given_arrival), the gate-4→5 loosen map
+(loosen_given_control), and the touch label rule.
 """
 
 from __future__ import annotations
@@ -95,3 +95,22 @@ FIT_C0: float = -1.50
 def fitted_control_prob(cushion_s: float) -> float:
     """Winner curve. Single home: tests import this, never redefine."""
     return touch_curve_exp(cushion_s, FIT_LAM, FIT_C0)
+
+
+# P(pass loosens structure | controlled, reception zone): press access
+# > 0 rate on banked controlled receptions (180/316/163 per zone).
+# Pinned in test_structure_fit. Uncontrolled rows excluded by definition
+# (gate 5's estimand conditions on control); no-control callers get 0.0.
+LOOSEN_RATE_BY_ZONE = {"def": 0.356, "mid": 0.351, "att": 0.258}
+
+
+def loosen_given_control(zone: str, controlled: bool) -> float:
+    """Gate 4 → gate 5: control + zone in, loosen probability out.
+
+    Single home for the zone table: value_surface calls this instead
+    of taking a caller-supplied map. Unknown zones and uncontrolled
+    receptions read 0.0 — never a fitted value.
+    """
+    if not controlled:
+        return 0.0
+    return LOOSEN_RATE_BY_ZONE.get(zone, 0.0)

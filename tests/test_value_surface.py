@@ -26,9 +26,14 @@ def test_no_opponents_yields_zero_value_not_safe():
 
 
 def test_outlet_value_fitted_prefers_forward_control():
+    # Default loosen 0.5 (unmodeled): value = control x progress x 0.5.
     assert outlet_value_fitted(0.9, 80.0) > outlet_value_fitted(0.9, 30.0)
-    assert outlet_value_fitted(0.9, 80.0) == round(0.9 * 80.0 / 105.0, 4)
+    assert outlet_value_fitted(0.9, 80.0) == round(0.9 * 80.0 / 105.0 * 0.5, 4)
     assert outlet_value_fitted(0.0, 80.0) == 0.0  # no control, no value
+    # Full loosen: control x progress, the gate-4 surface.
+    assert outlet_value_fitted(0.9, 80.0, loosen_prob=1.0) == round(
+        0.9 * 80.0 / 105.0, 4
+    )
 
 
 def test_hand_computed_cell_pins_full_chain():
@@ -48,4 +53,7 @@ def test_hand_computed_cell_pins_full_chain():
     cell = [c for c in cells if c.x_m == 7.5 and c.y_m == 8.5][0]
     assert cell.margin_s == res.margin_s
     assert cell.control_prob == comp.control_prob
-    assert cell.value == outlet_value_fitted(comp.control_prob, cell.x_m)
+    assert cell.loosen_prob == 0.356  # def-zone fitted rate, not default
+    assert cell.value == outlet_value_fitted(
+        comp.control_prob, cell.x_m, loosen_prob=0.356
+    )

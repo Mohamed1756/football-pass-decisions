@@ -34,6 +34,13 @@ ASSUMED_NLL: float = 3205.1
 POOL_N: int = 1160
 POOL_CONTROLS: int = 659
 
+# Structure-delta means on the same 1,160 (all rows have +3 s windows):
+# the average completed pass tightens structure — value is in the
+# right tail, not the mean. Pinned to 2dp.
+DELTA_PRESS_MEAN: float = -0.83
+DELTA_OPEN_MEAN: float = 0.13
+DELTA_COMPACT_MEAN: float = -0.72
+
 # Control by pooled cushion-decile (own tenths): observed vs fitted mean.
 # Monotone rising to q9, q10 dip on n=115 — noise, same tail pattern as gate 3.
 DECILE_OBS = (0.431, 0.431, 0.483, 0.487, 0.578, 0.638, 0.619, 0.640, 0.707, 0.670)
@@ -63,8 +70,7 @@ def test_winner_beats_null_and_assumed():
     assert sum(y for _, y in pairs) == POOL_CONTROLS
     null_rows = sum(y for _, y in pairs) / len(pairs)
     null = -sum(
-        y * math.log(null_rows) + (1 - y) * math.log(1 - null_rows)
-        for _, y in pairs
+        y * math.log(null_rows) + (1 - y) * math.log(1 - null_rows) for _, y in pairs
     )
     assert abs(null - NULL_NLL) < 1.0
     assert abs(_nll(rows, fitted_control_prob) - FIT_NLL) < 1.0
@@ -91,3 +97,16 @@ def test_control_by_decile_pins_curve():
         pred = sum(fitted_control_prob(c) for c, _ in bins[d]) / len(bins[d])
         assert abs(obs - DECILE_OBS[d - 1]) < 0.005
         assert abs(pred - DECILE_FIT[d - 1]) < 0.005
+
+
+def test_structure_delta_means_pinned():
+    import numpy as np
+
+    rows = pickle.load(open(RETENTION_LABELED_PATH, "rb"))
+    assert all(isinstance(r, dict) and r["delta_press_m"] is not None for r in rows)
+    press = np.array([r["delta_press_m"] for r in rows])
+    om = np.array([r["delta_open_men"] for r in rows])
+    comp = np.array([r["delta_compact_m"] for r in rows])
+    assert abs(press.mean() - DELTA_PRESS_MEAN) < 0.02
+    assert abs(om.mean() - DELTA_OPEN_MEAN) < 0.02
+    assert abs(comp.mean() - DELTA_COMPACT_MEAN) < 0.02

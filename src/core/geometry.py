@@ -4,8 +4,8 @@ All loaders map provider frames onto corner-origin meters: x in
 [0, 105] attack left-to-right, y in [0, 68]. Code outside the loaders
 never handles raw provider coordinates and never re-flips ends
 (one exception: Metrica periods keep raw orientation, so direction
-measurements like outlet_value progress are unreliable there — see
-outlet_value).
+measurements like value progress are unreliable there — see
+outlet_value_fitted).
 """
 
 from __future__ import annotations

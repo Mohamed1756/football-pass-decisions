@@ -29,10 +29,14 @@ MATCHES = ["J03WMX", "J03WN1", "J03WOH", "J03WOY", "J03WQQ", "J03WR9", "J03WPY"]
 def main() -> None:
     rows = []
     for m in MATCHES:
-        prefix = f"/private/tmp/idsse_{m}" if m != "J03WPY" else "/private/tmp/idsse"
-        length, width, teams, names = _load_roster(f"{prefix}_match.xml")
-        frames, ball, stamps = _read_tracking(f"{prefix}_pos.xml", teams, length, width)
-        passes = _read_passes(f"{prefix}_events.xml", stamps, teams, names)
+        c = "000001" if m in ("J03WMX", "J03WN1") else "000002"
+        base = "/tmp/idsse_raw/DFL"
+        mp = f"{base}_02_01_matchinformation_DFL-COM-{c}_DFL-MAT-{m}.xml"
+        pp = f"{base}_04_03_positions_raw_observed_DFL-COM-{c}_DFL-MAT-{m}.xml"
+        ep = f"{base}_03_02_events_raw_DFL-COM-{c}_DFL-MAT-{m}.xml"
+        length, width, teams, names = _load_roster(mp)
+        frames, ball, stamps = _read_tracking(pp, teams, length, width)
+        passes = _read_passes(ep, stamps, teams, names)
         kept = 0
         for p in passes:
             found = _reception_point(ball, frames, p.start_frame, p.target_id)
@@ -68,7 +72,43 @@ def main() -> None:
             )
             ready = receiver_readiness(rec, p.passer_pos_m)
             from src.models.retention.mechanism import label_touch
+            from src.models.structure.mechanism import structure_delta
 
+            f3 = end_frame + 75  # receipt+3 s at 25 Hz
+            b0 = ball.get(end_frame)
+            b3 = ball.get(f3)
+            r0 = frames.get(end_frame, {}).get(p.target_id)
+            r3 = frames.get(f3, {}).get(p.target_id)
+            delta = None
+            if b0 is not None and b3 is not None and r0 is not None and r3 is not None:
+                mates_b = {
+                    pid: pos
+                    for pid, pos in frames.get(end_frame, {}).items()
+                    if teams.get(pid) == teams.get(p.target_id) and pid != p.target_id
+                }
+                mates_a = {
+                    pid: pos
+                    for pid, pos in frames.get(f3, {}).items()
+                    if teams.get(pid) == teams.get(p.target_id) and pid != p.target_id
+                }
+                opps_b = {
+                    pid: pos
+                    for pid, pos in frames.get(end_frame, {}).items()
+                    if teams.get(pid) != teams.get(p.target_id)
+                }
+                opps_a = {
+                    pid: pos
+                    for pid, pos in frames.get(f3, {}).items()
+                    if teams.get(pid) != teams.get(p.target_id)
+                }
+                mates_b[p.target_id] = r0
+                mates_a[p.target_id] = r3
+                d = structure_delta(b0, b3, mates_b, mates_a, opps_b, opps_a)
+                delta = (
+                    d.press_access_delta_m,
+                    d.open_men_delta,
+                    d.compactness_delta_m,
+                )
             rows.append(
                 {
                     "match": m,
@@ -82,6 +122,11 @@ def main() -> None:
                     "cushion_s": ready.post_cushion_s(res.margin_s),
                     "marking_dist_m": w.marking_dist_m,
                     "controlled": label_touch(w.ball_plus1, w.receiver_plus1),
+                    "recept_x_m": round(end_pos.x, 2),
+                    "recept_y_m": round(end_pos.y, 2),
+                    "delta_press_m": delta[0] if delta else None,
+                    "delta_open_men": delta[1] if delta else None,
+                    "delta_compact_m": delta[2] if delta else None,
                 }
             )
             kept += 1
