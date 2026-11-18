@@ -1,6 +1,6 @@
 # Attempt
 
-(Research note for Football Passing Rank — how long the ball sticks
+(Research note for Football Passing Chain — how long the ball sticks
 before the next action. First fit banked on 1,160 intervals.)
 
 The unplayed ball is unobserved: no event+tracking dataset records

@@ -1,6 +1,6 @@
 # Resolution
 
-(Research note for Football Passing Rank — how the freeze resolved
+(Research note for Football Passing Chain — how the freeze resolved
 after control. Deltas banked on 1,160 receptions with +3 s windows.)
 
 The freeze gate 3 scored, three seconds later: press access

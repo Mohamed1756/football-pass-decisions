@@ -1,6 +1,6 @@
 # Choice
 
-(Research note for Football Passing Rank — which outlet gets picked,
+(Research note for Football Passing Chain — which outlet gets picked,
 given the freeze. First fit banked on 171,440 banked choice rows.)
 
 The choice is banked on every 360 pass: one row per pass (chosen

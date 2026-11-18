@@ -1,6 +1,6 @@
 # Retention
 
-(Research note for Football Passing Rank — the mechanism behind keeping
+(Research note for Football Passing Chain — the mechanism behind keeping
 the ball after arrival.)
 
 Control given arrival: the receiver has beaten the press to the

@@ -1,3 +1,3 @@
-"""Football Passing Rank: rank every passing outlet by its arrival cushion."""
+"""Football Passing Chain: freeze, attempt, choice, arrival, control, resolution."""
 
 __version__ = "0.1.0"

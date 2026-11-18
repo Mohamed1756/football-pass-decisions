@@ -1,6 +1,6 @@
 # Freeze
 
-(Research note for Football Passing Rank — what the freeze looked
+(Research note for Football Passing Chain — what the freeze looked
 like before the pass. Pre-freeze descriptors banked on 1,160 rows;
 the loop-closure test nulled.)
 

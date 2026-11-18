@@ -1,4 +1,4 @@
-# Football Passing Rank
+# Football Passing Chain
 
 This project codifies a passing move as six conditional gates, in order:
 **freeze** (what the shape looked like) → **attempt** (how long the ball
