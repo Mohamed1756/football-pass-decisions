@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 560" role="img">
+<title>Resolution: press-access change by zone and control</title>
+<text x="500" y="32" text-anchor="middle" font-size="19" fill="#24292f">Completed passes tighten structure everywhere</text>
+<text x="500" y="54" text-anchor="middle" font-size="13" fill="#57606a">Mean press-access delta (m) by reception zone and first touch · 1,160 IDSSE receptions · red = converges, blue = loosens</text>
+<text x="200" y="165" text-anchor="end" font-size="14" fill="#24292f">controlled</text>
+<rect x="240" y="120" width="180" height="100" fill="rgb(222,135,156)" stroke="#d0d7de" stroke-width="1.5"/>
+<text x="330" y="165" text-anchor="middle" font-size="22" fill="#24292f">-1.40</text>
+<text x="330" y="188" text-anchor="middle" font-size="12" fill="#57606a">n=180</text>
+<rect x="440" y="120" width="180" height="100" fill="rgb(230,150,166)" stroke="#d0d7de" stroke-width="1.5"/>
+<text x="530" y="165" text-anchor="middle" font-size="22" fill="#24292f">-1.08</text>
+<text x="530" y="188" text-anchor="middle" font-size="12" fill="#57606a">n=316</text>
+<rect x="640" y="120" width="180" height="100" fill="rgb(196,83,122)" stroke="#d0d7de" stroke-width="1.5"/>
+<text x="730" y="165" text-anchor="middle" font-size="22" fill="#24292f">-2.52</text>
+<text x="730" y="188" text-anchor="middle" font-size="12" fill="#57606a">n=163</text>
+<text x="200" y="295" text-anchor="end" font-size="14" fill="#24292f">lost</text>
+<rect x="240" y="250" width="180" height="100" fill="rgb(254,198,199)" stroke="#d0d7de" stroke-width="1.5"/>
+<text x="330" y="295" text-anchor="middle" font-size="22" fill="#24292f">-0.03</text>
+<text x="330" y="318" text-anchor="middle" font-size="12" fill="#57606a">n=106</text>
+<rect x="440" y="250" width="180" height="100" fill="rgb(231,240,231)" stroke="#d0d7de" stroke-width="1.5"/>
+<text x="530" y="295" text-anchor="middle" font-size="22" fill="#24292f">+0.44</text>
+<text x="530" y="318" text-anchor="middle" font-size="12" fill="#57606a">n=272</text>
+<rect x="640" y="250" width="180" height="100" fill="rgb(239,169,179)" stroke="#d0d7de" stroke-width="1.5"/>
+<text x="730" y="295" text-anchor="middle" font-size="22" fill="#24292f">-0.67</text>
+<text x="730" y="318" text-anchor="middle" font-size="12" fill="#57606a">n=123</text>
+<text x="330" y="105" text-anchor="middle" font-size="14" fill="#24292f">def</text>
+<text x="530" y="105" text-anchor="middle" font-size="14" fill="#24292f">mid</text>
+<text x="730" y="105" text-anchor="middle" font-size="14" fill="#24292f">att</text>
+<g font-size="13" fill="#24292f"><text x="740" y="400" font-weight="bold">Takeaway</text><text x="740" y="422" font-size="13">Tightening everywhere on</text><text x="740" y="440" font-size="13">control; only mid loosens</text><text x="740" y="458" font-size="13">on failed receipt (+0.44).</text></g>
+</svg>

@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 560" role="img">
+<title>Freeze: pre-pass shape by zone</title>
+<text x="500" y="32" text-anchor="middle" font-size="19" fill="#24292f">Freezes start pressed; men close down, not open up</text>
+<text x="500" y="54" text-anchor="middle" font-size="13" fill="#57606a">Mean press access (m, blue) + separation velocity (m/fr, red) 5 s before the pass · 1,159 IDSSE receptions with full tracks</text>
+<rect x="90" y="76" width="620" height="400" fill="none" stroke="#d0d7de" stroke-width="1.5"/>
+<rect x="121" y="306" width="80" height="114" fill="#0969da"/>
+<text x="161" y="500" text-anchor="middle" font-size="12" fill="#24292f">def</text>
+<text x="161" y="296" text-anchor="middle" font-size="13" fill="#24292f">5.52 m</text>
+<circle cx="261" cy="317" r="6" fill="#cf222e"/>
+<text x="261" y="500" text-anchor="middle" font-size="12" fill="#57606a">sep</text>
+<text x="261" y="305" text-anchor="middle" font-size="12" fill="#cf222e">-0.329</text>
+<rect x="321" y="302" width="80" height="118" fill="#0969da"/>
+<text x="361" y="500" text-anchor="middle" font-size="12" fill="#24292f">mid</text>
+<text x="361" y="292" text-anchor="middle" font-size="13" fill="#24292f">5.57 m</text>
+<circle cx="461" cy="288" r="6" fill="#cf222e"/>
+<text x="461" y="500" text-anchor="middle" font-size="12" fill="#57606a">sep</text>
+<text x="461" y="276" text-anchor="middle" font-size="12" fill="#cf222e">-0.280</text>
+<rect x="521" y="182" width="80" height="238" fill="#0969da"/>
+<text x="561" y="500" text-anchor="middle" font-size="12" fill="#24292f">att</text>
+<text x="561" y="172" text-anchor="middle" font-size="13" fill="#24292f">7.18 m</text>
+<circle cx="661" cy="296" r="6" fill="#cf222e"/>
+<text x="661" y="500" text-anchor="middle" font-size="12" fill="#57606a">sep</text>
+<text x="661" y="284" text-anchor="middle" font-size="12" fill="#cf222e">-0.293</text>
+<line x1="90" y1="345" x2="710" y2="345" stroke="#d0d7de" stroke-width="1" stroke-dasharray="3 5"/>
+<text x="82" y="349" text-anchor="end" font-size="12" fill="#0969da">5.0 m</text>
+<line x1="90" y1="270" x2="710" y2="270" stroke="#d0d7de" stroke-width="1" stroke-dasharray="3 5"/>
+<text x="82" y="274" text-anchor="end" font-size="12" fill="#0969da">6.0 m</text>
+<line x1="90" y1="195" x2="710" y2="195" stroke="#d0d7de" stroke-width="1" stroke-dasharray="3 5"/>
+<text x="82" y="199" text-anchor="end" font-size="12" fill="#0969da">7.0 m</text>
+<g font-size="13" fill="#24292f"><rect x="744" y="112" width="14" height="14" fill="#0969da"/><text x="762" y="124">press access (bar, left m)</text><circle cx="751" cy="140" r="6" fill="#cf222e"/><text x="762" y="145">sep. velocity (dot, labeled)</text><g font-size="13" fill="#24292f"><circle cx="750" cy="120" r="5" fill="#0969da"/><text x="762" y="125">press access (m)</text><circle cx="750" cy="144" r="5" fill="#cf222e"/><text x="762" y="149">sep. velocity (m/fr)</text><text x="740" y="180" font-weight="bold">Takeaway</text><text x="740" y="202" font-size="13">Attacking freezes start</text><text x="740" y="220" font-size="13">most pressed (7.18 m);</text><text x="740" y="238" font-size="13">men close down everywhere</text>
+</svg>

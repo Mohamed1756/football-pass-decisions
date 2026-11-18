@@ -1,43 +1,58 @@
 # Football Passing Rank
 
-Safety of a receiving outlet as a physical race, not a distance heuristic.
-Both sides race to the ball-to-runner intercept.
+This project codifies a passing move as six conditional gates, in order:
+**freeze** (what the shape looked like) → **attempt** (how long the ball
+sticks) → **choice** (which outlet gets picked) → **arrival** (does it
+get there) → **control** (does it stick) → **resolution** (did it break
+shape). Each gate has its research note, its banked pool, and its pinned
+tests; each conditions on the last. One call threads gates 3–5
+(`run_outlet`); the full chain runs from any tracked freeze.
 
 ![Frozen vs live on one IDSSE pass (0.96 s measured flight, illustrative)](docs/figs/fig5_frozen_vs_live.svg)
 
-## What it says
+## Freeze
 
-**Rank orders risk.** Bottom decile fails at 20–27%; the top at
-0.2–0.5% — monotone falling across all ten deciles on each of the
-five 360 leagues on frozen WC2022 edges (fig1). Rank 0 fails at
-0.02–0.05 on 360 choice sets (league range 0.020–0.048); failure
-rises with chosen rank to rank 6, tail pooled past noise. Passers
-pick the safest outlet 0.41–0.44 of the time (league range; WC2022
-0.44). No rank curve exists on tracking pools — no full choice sets
-scored there, so rank-0 has no tracking anchor.
+Press access and separation velocity at t=0, measured over the 5 s of off-ball movement that produced the choice set. The loop from loosening back to openness does not close (corr +0.10 on 1,152 linked pairs — architecture, not evidence).
+
+![Pre-freeze shape by zone](docs/figs/fig10_freeze_schematic.svg)
+
+## Attempt
+
+Hold duration given control, by reception zone. Median 2.16 s overall (q25 1.36, q75 3.92); mid moves it quickest at 0.703 pass-within-3 s. Pass exits dominate in all zones (958/1160). The unplayed ball stays unobserved.
+
+![Hold duration by zone](docs/figs/fig11_hold_by_zone.svg)
+
+## Choice
+
+The choice-share curve over ranks, pooled. Rank 0 takes 0.41–0.44 on all five 360 leagues; the curve falls monotonically to a pooled tail. Top-2 ranks take ~0.68 of all passes. What passers pick, given the freeze.
+
+![Choice shares by league](docs/figs/fig12_choice_shares.svg)
+
+## Arrival
+
+Margin decile fails at 20–27% at the bottom, 0.2–0.5% at the top — monotone across all ten deciles on each of the five 360 leagues on frozen WC2022 edges. Rank 0 fails at 0.02–0.05; failure rises with chosen rank to rank 6, tail pooled past noise. Absolute seconds are inflated (frozen shape, standing starts). Decile 1 = tightest cushion, decile 10 = safest; play rank (`rank_outlets`) sorts outlets on one freeze safest-first, decile bins one margin against fixed WC2022 edges.
 
 ![Margin decile vs incompletion, five 360 leagues plus broadcast first cut](docs/figs/fig1_decile_curves.png)
 
-Absolute seconds are inflated (frozen shape, standing starts) — trust
-the ordering, not the clock. Decile 1 = tightest cushion, decile 10 =
-safest; play rank (`rank_outlets`) sorts outlets on one freeze
-safest-first, decile bins one margin against fixed WC2022 edges.
-Tracking pools (A-League targeted n=14,822, IDSSE measured n=1,160)
-grade on their own tenths — pooled deciles, same shape, noisier tail;
-`scripts/reproduce.py` prints them on frozen edges for common ground.
-
-**Levels shift with pace, order doesn't.** The women's curve runs
-parallel above men's: same ranking power, higher levels — WWC2023
-fails ~1.5x the WC2022 rate at equal frozen-shape margin, so one
-environment multiplier (`pace_k=1.5`) re-scales levels, not edges.
+Levels shift with pace, order doesn't. WWC2023 fails ~1.5x the WC2022 rate at equal frozen-shape margin, so one environment multiplier (`pace_k=1.5`) re-scales levels, not edges.
 
 ![Same freeze, two paces](docs/figs/fig7_risk_surface.svg)
 
-**Decisions separate teams; finishing decides tables.** Base
-incompletion spreads 2x across 13 A-League clubs, median attempted
-cushion spreads 2x — Melbourne City leads both. But rank predicts
-arrival, not points (points vs base incompletion −0.26; points vs
-median cushion −0.23 — neither worth naming):
+## Control
+
+Retention given arrival, fitted on 1,160 labeled receptions. Shifted exponential wins (NLL 782.6 vs null 793.3); the assumed logistic loses to the null by 2412. Control by cushion decile runs 0.43 to 0.67, monotone to q9 with a q10 dip on n=115.
+
+![Control by cushion decile](docs/figs/fig8_retention_deciles.svg)
+
+## Resolution
+
+Structure change given control, by reception zone. Completed passes tighten structure everywhere (press −1.1 to −2.5, compactness −0.2 to −2.2); only failed receptions in mid loosen it (+0.44). Value lives in the right tail, not the mean.
+
+![Resolution heatmap](docs/figs/fig9_resolution_heatmap.svg)
+
+## What the table doesn't care about
+
+Base incompletion spreads 2x across 13 A-League clubs, median attempted cushion spreads 2x — Melbourne City leads both. Rank predicts arrival, not points (points vs base incompletion −0.26; points vs median cushion −0.23).
 
 ![Team decisions vs finishing, A-League](docs/figs/fig3_team_fingerprints.svg)
 
@@ -45,75 +60,27 @@ Full story: [`docs/table-vs-fingerprints.md`](docs/table-vs-fingerprints.md).
 
 ## How to use it
 
-Three moves, full version in [`docs/methods.md`](docs/methods.md):
-
-1. **Rank** every outlet by arrival cushion (`rank_outlets`).
-2. **Re-scale** levels per pace environment (`decile_risk(decile, pace_k)`).
-3. **Measure** seconds where tracking exists (`measured=(intercept, t_ball)`).
-
-## Quick Start
-
-```bash
-python3.11 -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
-pytest -q
-```
-
-## Usage
-
 ```python
+from src.models.pipeline import run_outlet
 from src.core.geometry import PitchPoint
-from src.models.pressing.arrival import arrival_margin
-from src.models.pressing.readiness import receiver_readiness
 from src.models.pressing.types import PressingActor
-from src.models.pressing.calibration import rank_outlets, rank_risk
 
 receiver = PressingActor(track_id=9, team_id="own", pos_m=PitchPoint(86.0, 25.0))
-presser = PressingActor(
-    track_id=1, team_id="opp",
-    pos_m=PitchPoint(87.5, 26.5), vel_ms=(-4.0, -2.0),
-)
-res = arrival_margin(receiver, [presser], PitchPoint(100.0, 29.0))
-ready = receiver_readiness(receiver, PitchPoint(100.0, 29.0))
-print(res.margin_s, res.t_ball_s, res.t_press_s, res.best_presser_id)
-print(ready.reception_latency_s, ready.post_cushion_s(res.margin_s))
+presser = PressingActor(track_id=1, team_id="opp", pos_m=PitchPoint(87.5, 26.5))
+out = run_outlet(receiver, [presser], PitchPoint(100.0, 29.0))
+print(out.margin_s, out.control_prob, out.loosen_prob, out.value)
+```
 
-# Rank outlets on raw arrival margin; retention is a monotone diagnostic
-# for reordering only — its absolute value is uncalibrated (assumed
-# 0.45 s touch + logistic, never fitted), so it is not printed bare:
-outlets = [1.9, 0.4, 1.2]  # margins per outlet
-ranks = rank_outlets(outlets)
-print([(r.rank, rank_risk(r.rank)) for r in ranks])
-
-Modules: `models/pressing/` (arrival, calibration, readiness, types),
-`physics/` (constants, biomechanics), `core/geometry.py`,
-`io/` (metrica, skillcorner, idsse loaders). Research note:
-`arrival.md`. Pooled evidence: `data/pooled/` (deciles, team splits,
-drag rematch, value-added null — see its index README). Reproduce:
-`python3 scripts/reproduce.py` (numpy + stdlib only, seconds).
+One call threads gates 3–5: arrival margin, fitted control, zone loosening, value. `scripts/reproduce.py` prints the banked tables (numpy + stdlib). `scripts/figures.py` rebuilds figs 8–12 from pinned tests.
 
 ## Data & licence
 
-StatsBomb Open Data: github.com/statsbomb/open-data (360
-freeze-frames). Metrica sample: github.com/metrica-sports/sample-data.
-SkillCorner Open Data: github.com/SkillCorner/opendata (MIT). IDSSE:
-Hugging Face `pysport/idsse-data` (CC-BY 4.0, Bassek et al. 2025).
-Code is MIT — see LICENSE.
+StatsBomb Open Data: github.com/statsbomb/open-data (360 freeze-frames). Metrica sample: github.com/metrica-sports/sample-data. SkillCorner Open Data: github.com/SkillCorner/opendata (MIT). IDSSE: Hugging Face `pysport/idsse-data` (CC-BY 4.0, Bassek et al. 2025). Code is MIT — see LICENSE.
+
+Independent evidence is 5 360 leagues + 1 broadcast pool + 1 measured pool — the 13 banked files are cuts and re-binnings of those seven inputs, not thirteen studies.
 
 ## Sources
 
-Each dataset exists because the previous one hit a wall: StatsBomb 360
-(173,440 passes, frozen gradient) → Metrica (25 Hz velocities, no
-outcomes) → SkillCorner (20 matches, real outcomes, broadcast 10 fps)
-→ IDSSE (Bassek et al. 2025, TRACAB 25 fps, measured receptions).
-Independent evidence is 5 360 leagues + 1 broadcast pool + 1 measured
-pool — the 13 banked files are cuts and re-binnings of those seven
-inputs, not thirteen studies. The chain converges on one instrument:
-rank from frozen shape, levels per pace, seconds from measurement.
+Research notes per gate: `arrival.md`, `retention.md`, `resolution.md`, `freeze.md`, `attempt.md`, `choice.md`. Pooled evidence: `data/pooled/` (see its index README). Provenance: [`docs/sources.md`](docs/sources.md).
 
-Physics concepts borrowed, values assumed (per-constant notes in
-`src/physics/arrival_constants.py`): Spearman et al. 2017
-(time-to-control); Morin et al. 2016 + Samozino et al. 2021 (sprint
-profiling); FIFA Quality Programme (ball-surface interaction);
-Lees & Nolan 1998 (hip-pivot latencies).
+Physics concepts borrowed, values assumed (per-constant notes in `src/physics/arrival_constants.py`): Spearman et al. 2017 (time-to-control); Morin et al. 2016 + Samozino et al. 2021 (sprint profiling); FIFA Quality Programme (ball-surface interaction); Lees & Nolan 1998 (hip-pivot latencies).

@@ -1,6 +1,6 @@
 """Structure-delta tests: hand-computed frame arithmetic."""
 
-from src.models.structure.mechanism import OPEN_MAN_RADIUS_M, structure_delta
+from src.models.structure.mechanism import structure_delta
 
 
 def test_press_broken_positive():
@@ -14,20 +14,6 @@ def test_press_broken_positive():
         {"P9": (67.0, 34.0)},
     )
     assert d.press_access_delta_m == 4.0
-    assert OPEN_MAN_RADIUS_M == 5.0
-
-
-def test_open_men_counts_separation():
-    # Mate 6 m from nearest opp after, 2 m before: +1 open man.
-    d = structure_delta(
-        (60.0, 34.0),
-        (61.0, 34.0),
-        {"P2": (60.0, 34.0), "P4": (50.0, 20.0)},
-        {"P2": (61.0, 34.0), "P4": (50.0, 20.0)},
-        {"P9": (62.0, 34.0), "P8": (51.0, 21.0)},
-        {"P9": (70.0, 34.0), "P8": (51.0, 21.0)},
-    )
-    assert d.open_men_delta == 1  # P9 left; P8 still tight on P4
 
 
 def test_compactness_stretched_positive():

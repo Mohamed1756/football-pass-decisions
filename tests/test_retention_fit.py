@@ -38,7 +38,6 @@ POOL_CONTROLS: int = 659
 # the average completed pass tightens structure — value is in the
 # right tail, not the mean. Pinned to 2dp.
 DELTA_PRESS_MEAN: float = -0.83
-DELTA_OPEN_MEAN: float = 0.13
 DELTA_COMPACT_MEAN: float = -0.72
 
 # Control by pooled cushion-decile (own tenths): observed vs fitted mean.
@@ -105,8 +104,6 @@ def test_structure_delta_means_pinned():
     rows = pickle.load(open(RETENTION_LABELED_PATH, "rb"))
     assert all(isinstance(r, dict) and r["delta_press_m"] is not None for r in rows)
     press = np.array([r["delta_press_m"] for r in rows])
-    om = np.array([r["delta_open_men"] for r in rows])
     comp = np.array([r["delta_compact_m"] for r in rows])
     assert abs(press.mean() - DELTA_PRESS_MEAN) < 0.02
-    assert abs(om.mean() - DELTA_OPEN_MEAN) < 0.02
     assert abs(comp.mean() - DELTA_COMPACT_MEAN) < 0.02

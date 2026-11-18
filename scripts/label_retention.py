@@ -1,8 +1,9 @@
-"""Label retention touches on raw IDSSE tracking (gate 4, slice 3).
+"""Label retention touches + gate-0/1 windows on raw IDSSE tracking.
 
-Reads the 7 raw matches, applies the slice-1 label rule at receipt+1 s,
-banks (cushion, marking, controlled) rows. Slow (~2 min, 400 MB XML):
-run on demand, not in CI. CI pins the banked file instead.
+Reads the 7 raw matches, applies the touch rule at receipt+1 s,
+banks (cushion, marking, controlled, deltas, pre-freeze, hold) rows.
+Slow (~2 min, 400 MB XML): run on demand, not in CI. CI pins the
+banked file instead.
 """
 
 import pickle
@@ -37,12 +38,17 @@ def main() -> None:
         length, width, teams, names = _load_roster(mp)
         frames, ball, stamps = _read_tracking(pp, teams, length, width)
         passes = _read_passes(ep, stamps, teams, names)
+        from src.io.idsse import _read_events_raw
+        from src.models.attempt.mechanism import next_event
+
+        raw_events = _read_events_raw(ep, stamps)
         kept = 0
         for p in passes:
             found = _reception_point(ball, frames, p.start_frame, p.target_id)
             if found is None:
                 continue
             end_pos, end_frame = found
+            hold = next_event(raw_events, end_frame)
             w = reception_window(ball, frames, end_frame, p.target_id)
             if w.ball_plus1 is None or w.receiver_plus1 is None:
                 continue
@@ -71,6 +77,7 @@ def main() -> None:
                 measured=(end_pos, (end_frame - p.start_frame) / 25.0),
             )
             ready = receiver_readiness(rec, p.passer_pos_m)
+            from src.models.formation.mechanism import formation_window
             from src.models.retention.mechanism import label_touch
             from src.models.structure.mechanism import structure_delta
 
@@ -106,9 +113,41 @@ def main() -> None:
                 d = structure_delta(b0, b3, mates_b, mates_a, opps_b, opps_a)
                 delta = (
                     d.press_access_delta_m,
-                    d.open_men_delta,
                     d.compactness_delta_m,
                 )
+            pre = None
+            f0 = p.start_frame
+            f5 = f0 - 125  # pass -5 s at 25 Hz
+            if f5 in frames and f0 in frames and ball.get(f0) is not None:
+                mates_f = {
+                    pid: pos
+                    for pid, pos in frames.get(f0, {}).items()
+                    if teams.get(pid) == teams.get(p.target_id)
+                }
+                opps_f = {
+                    pid: pos
+                    for pid, pos in frames.get(f0, {}).items()
+                    if teams.get(pid) != teams.get(p.target_id)
+                }
+                tracks: dict = {}
+                ok = True
+                for pid in mates_f:
+                    track = []
+                    for f in range(f5, f0 + 1, 25):
+                        pos = frames.get(f, {}).get(pid)
+                        if pos is None:
+                            ok = False
+                            break
+                        track.append(pos)
+                    if not ok:
+                        break
+                    tracks[pid] = track
+                if ok and mates_f and opps_f:
+                    fw = formation_window(ball.get(f0), mates_f, opps_f, tracks)
+                    pre = (
+                        fw.press_access_at_freeze_m,
+                        fw.separation_velocity_ms,
+                    )
             rows.append(
                 {
                     "match": m,
@@ -118,15 +157,17 @@ def main() -> None:
                     "complete": p.complete,
                     "margin_s": res.margin_s,
                     "t_ball_s": res.t_ball_s,
-                    "t_press_s": res.t_press_s,
                     "cushion_s": ready.post_cushion_s(res.margin_s),
                     "marking_dist_m": w.marking_dist_m,
                     "controlled": label_touch(w.ball_plus1, w.receiver_plus1),
                     "recept_x_m": round(end_pos.x, 2),
                     "recept_y_m": round(end_pos.y, 2),
                     "delta_press_m": delta[0] if delta else None,
-                    "delta_open_men": delta[1] if delta else None,
-                    "delta_compact_m": delta[2] if delta else None,
+                    "delta_compact_m": delta[1] if delta else None,
+                    "pre_press_m": pre[0] if pre else None,
+                    "pre_sep_vel": pre[1] if pre else None,
+                    "hold_s": hold.duration_s if hold else None,
+                    "hold_exit": hold.exit if hold else None,
                 }
             )
             kept += 1

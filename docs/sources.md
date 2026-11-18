@@ -10,7 +10,7 @@ or a pool re-cut, update the row here, not the prose everywhere.
 
 | Source | Access | Licence | Gates using it | Take | Don't take |
 |---|---|---|---|---|---|
-| StatsBomb Open Data 360 (WC2022, Euro2020/2024, LaLiga 20/21, WWC2023) | github.com/statsbomb/open-data | Open | 3 (frozen calibration) | 173,440 frozen ground passes, full choice sets, outcomes | Velocities (none carried); seconds (standing starts inflate) |
+| StatsBomb Open Data 360 (WC2022, Euro2020/2024, LaLiga 20/21, WWC2023) | github.com/statsbomb/open-data | Open | 3 (frozen calibration) | 171,440 frozen ground passes, full choice sets, outcomes | Velocities (none carried); seconds (standing starts inflate) |
 | Metrica sample-data (Sample Game 1+2) | github.com/metrica-sports/sample-data | Open | 3 (mechanism tests), 4 (candidate) | 25 Hz velocities, ball track, measured peak speeds | Outcomes (two games, no labels); ends unnormalized across periods |
 | SkillCorner Open Data (20 A-League 24/25 matches) | github.com/SkillCorner/opendata | MIT | 3 (broadcast replication), 4–5 (candidates) | 10 fps tracking, provider targeted receivers, possession outcomes | Precision (broadcast noise; trust gate catches spikes) |
 | IDSSE (Bassek et al. 2025, 7 Bundesliga 22/23 matches) | Hugging Face `pysport/idsse-data` | CC-BY 4.0 | 3 (measured truth), 4–5 (candidates) | 25 fps TRACAB + ball, DFL events, measured receptions | Volume (1,160 measured; thin per player) |

@@ -32,7 +32,7 @@
 <circle cx="648" cy="328" r="5" fill="none" stroke="#cf222e" stroke-width="2" opacity="0.8"/>
 <circle cx="649" cy="194" r="5" fill="none" stroke="#cf222e" stroke-width="2" opacity="0.8"/>
 <text x="60" y="596" font-size="13" fill="#24292f">t_ball 0.64 s &#183; t_press 2.12 s &#183; margin 1.48 s &#8212; decile 3, completed</text>
-<text x="60" y="614" font-size="12" fill="#57606a">360 snapshot at pass moment. One of 173,440; its decile bin feeds fig1.</text>
+<text x="60" y="614" font-size="12" fill="#57606a">360 snapshot at pass moment. One of 171,440; its decile bin feeds fig1.</text>
 <text x="790" y="140" font-size="14" font-weight="bold" fill="#24292f">Legend</text>
 <circle cx="796" cy="166" r="6" fill="#24292f"/><text x="810" y="171" font-size="13" fill="#24292f">passer + ball path</text>
 <circle cx="796" cy="192" r="7" fill="none" stroke="#0969da" stroke-width="2.5" stroke-dasharray="3 2"/><text x="810" y="197" font-size="13" fill="#24292f">nearest mate (run arrives later)</text>

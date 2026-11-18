@@ -112,6 +112,41 @@ def _read_tracking(
     return frames, ball, stamps
 
 
+def _read_events_raw(
+    path: str,
+    stamps: Dict[int, float],
+) -> List[Tuple[int, str]]:
+    """Every Play as (frame, kind): pass / loss / stoppage.
+
+    Pass = any Height play with a Player (flat or high); loss = any
+    unsuccessful Evaluation; stoppage = whistle events (no Play).
+    Kinds outside pass/loss/stoppage are dropped — next_event filters.
+    """
+    from bisect import bisect_left
+    from datetime import datetime
+
+    ordered = sorted(stamps)
+    epochs = [stamps[f] for f in ordered]
+    out = []
+    tree = ET.parse(path)
+    for event in tree.getroot().iter("Event"):
+        try:
+            t = datetime.fromisoformat(event.attrib["EventTime"]).timestamp()
+        except (KeyError, ValueError):
+            continue
+        f0 = ordered[min(bisect_left(epochs, t), len(ordered) - 1)] if ordered else 0
+        for play in event:
+            if play.tag != "Play":
+                continue
+            ev = play.attrib.get("Evaluation", "")
+            height = play.attrib.get("Height", "")
+            if ev == "unsuccessful":
+                out.append((f0, "loss"))
+            elif height in ("flat", "high"):
+                out.append((f0, "pass"))
+    return sorted(out)
+
+
 def _read_passes(
     path: str,
     stamps: Dict[int, float],

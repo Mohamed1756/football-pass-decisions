@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 560" role="img">
+<title>Retention: control by cushion decile</title>
+<text x="500" y="32" text-anchor="middle" font-size="19" fill="#24292f">Tighter cushions lose the ball — fitted exponential holds</text>
+<text x="500" y="54" text-anchor="middle" font-size="13" fill="#57606a">Control rate by post-touch cushion decile (own tenths) · 1,160 IDSSE receptions · dots observed, line fitted (lam 0.40, c0 -1.50)</text>
+<rect x="90" y="76" width="620" height="400" fill="none" stroke="#d0d7de" stroke-width="1.5"/>
+<text x="121" y="496" text-anchor="middle" font-size="12" fill="#24292f">1</text>
+<text x="183" y="496" text-anchor="middle" font-size="12" fill="#24292f">2</text>
+<text x="245" y="496" text-anchor="middle" font-size="12" fill="#24292f">3</text>
+<text x="307" y="496" text-anchor="middle" font-size="12" fill="#24292f">4</text>
+<text x="369" y="496" text-anchor="middle" font-size="12" fill="#24292f">5</text>
+<text x="431" y="496" text-anchor="middle" font-size="12" fill="#24292f">6</text>
+<text x="493" y="496" text-anchor="middle" font-size="12" fill="#24292f">7</text>
+<text x="555" y="496" text-anchor="middle" font-size="12" fill="#24292f">8</text>
+<text x="617" y="496" text-anchor="middle" font-size="12" fill="#24292f">9</text>
+<text x="679" y="496" text-anchor="middle" font-size="12" fill="#24292f">10</text>
+<text x="400" y="528" text-anchor="middle" font-size="13" fill="#57606a">cushion decile (1 = tightest post-touch time, 10 = loosest)</text>
+<text x="82" y="440" text-anchor="end" font-size="12" fill="#57606a">0.3</text>
+<text x="82" y="296" text-anchor="end" font-size="12" fill="#57606a">0.5</text>
+<text x="82" y="152" text-anchor="end" font-size="12" fill="#57606a">0.7</text>
+<text x="34" y="280" text-anchor="middle" font-size="13" fill="#57606a" transform="rotate(-90 34 280)">share of receptions controlled</text>
+<polyline points="121,427 183,363 245,331 307,308 369,285 431,265 493,244 555,214 617,178 679,112" fill="none" stroke="#0969da" stroke-width="2.5"/>
+<circle cx="121" cy="346" r="4" fill="#cf222e"/>
+<circle cx="183" cy="346" r="4" fill="#cf222e"/>
+<circle cx="245" cy="308" r="4" fill="#cf222e"/>
+<circle cx="307" cy="305" r="4" fill="#cf222e"/>
+<circle cx="369" cy="240" r="4" fill="#cf222e"/>
+<circle cx="431" cy="197" r="4" fill="#cf222e"/>
+<circle cx="493" cy="210" r="4" fill="#cf222e"/>
+<circle cx="555" cy="195" r="4" fill="#cf222e"/>
+<circle cx="617" cy="147" r="4" fill="#cf222e"/>
+<circle cx="679" cy="174" r="4" fill="#cf222e"/>
+<g font-size="13" fill="#24292f"><circle cx="750" cy="120" r="4" fill="#cf222e"/><text x="762" y="125">observed</text><line x1="744" y1="144" x2="756" y2="144" stroke="#0969da" stroke-width="2.5"/><text x="762" y="149">fitted exp</text><text x="740" y="180" font-weight="bold">Takeaway</text><text x="740" y="202" font-size="13">Monotone to q9; q10 dips</text><text x="740" y="220" font-size="13">on n=115 — same tail as</text><text x="740" y="238" font-size="13">the arrival gradient.</text></g>
+</svg>

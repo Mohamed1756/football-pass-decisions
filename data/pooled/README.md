@@ -11,7 +11,7 @@ rule that bins everything (WC2022 edges) is the literal
 
 | File | n | Backs |
 |---|---|---|
-| `frozen_five_leagues.pkl` | 173,440 dicts by league (margin, rank, complete) | fig1 five curves, ~100x gradient. **Frozen 360 input: no loader in repo.** Counts: wc2022 41,561; euro2020 33,761; laliga 28,694; euro2024 34,617; wwc2023 32,807 |
+| `frozen_five_leagues.pkl` | 171,440 dicts by league (margin, rank, complete) | fig1 five curves, ~100x gradient. **Frozen 360 input: no loader in repo.** Counts: wc2022 41,561; euro2020 33,761; laliga 28,694; euro2024 34,617; wwc2023 32,807 |
 | `skillcorner_frozen_live.pkl` | 14,814 ×2 (margin, outcome) | fig1 sixth line, first (heuristic) cut. Superseded by the targeted pool below |
 | `skillcorner_targeted_frozen_live.pkl` | 14,822 ×2, targeted receivers | **Canonical broadcast pool.** Pooled-decile d1 0.245 frozen / 0.221 live (same shape, noisier tight top); supersedes heuristic version |
 | `skillcorner_team_margins.pkl` | 14,822 live-presser margins keyed (match, side) → 13 clubs after the match_teams.json join (fig3/table n=13,122 is the plotted labeled-pass subset — recount before reusing) | fig3 team fingerprints (join match.json for names) |
@@ -22,7 +22,7 @@ rule that bins everything (WC2022 edges) is the literal
 | `idsse_measured_live.pkl` | 673 (margin, outcome) | First-3-matches cut cited in earlier drafts |
 | `idsse_pooled7.pkl` | 631 (margin, outcome) | Same, alternate cut; kept for audit |
 | `value_choice_by_passer.pkl` | 124 passers: name → [n, rank0_choices, value_choices, completions, total_outlets] (51 with n≥5 drive the null: rank-0 choice 0.00–0.25, completion 0.60–1.00, value/completion corr 0.02) | Value-added null |
-| `idsse_retention_labeled.pkl` | 1,160 dict rows (match, target, margin, cushion, marking, controlled, 3 deltas): 659 controls, all rows with full +3 s windows; banked by `scripts/label_retention.py` from 7 raw matches (HuggingFace `pysport/idsse-data`, re-downloadable) | Gates 4–5: shifted exp wins (NLL 782.6 vs null 793.3, assumed 3205.1); structure means press −0.83 / open +0.13 / compact −0.72 |
+| `idsse_retention_labeled.pkl` | 1,160 dict rows: match/target/passer keys, margin, t_ball, cushion, marking, controlled, recept x/y, delta press+compact, pre press+sep-vel, hold duration+exit. 659 controlled, 1,159 with full −5 s, all with +3 s. Banked by `scripts/label_retention.py` from 7 raw matches (HuggingFace `pysport/idsse-data`, re-downloadable). Keys: `recept_x_m`, `recept_y_m`, `delta_press_m`, `delta_compact_m`, `pre_press_m`, `pre_sep_vel`, `hold_s`, `hold_exit` | Gates 4–5 + freeze + attempt: shifted exp wins (NLL 782.6 vs null 793.3); structure press −0.83 / compact −0.72; hold median 2.16 s; pre-freeze press 5.5–7.2 |
 
 Superseded cuts are marked, not deleted: early notes cite their numbers.
 

@@ -55,10 +55,9 @@ def receiver_readiness(
     """Time cost of taking the ball on the front foot: 0.45 s first touch
     plus hip-turn latency off measured pose, 0.25 s floor when unknown.
     facing_source/note are provenance for calibration, not scored inputs.
-    Note: gate 4 sketches a 0.39 s placeholder mean for unknown-facing
-    receiver latency in its own touch model — that lives in gate 4
-    code, never here: this function's outputs feed fitted gate-3
-    edges (DECILE_EDGES_S), which describe 0.25-floor cushions.
+    Gate 4 owns its own unknown-facing latency; this function's outputs
+    feed fitted gate-3 edges (DECILE_EDGES_S), which describe 0.25-floor
+    cushions.
     """
     facing, source = resolve_facing(receiver)
     if facing is None:

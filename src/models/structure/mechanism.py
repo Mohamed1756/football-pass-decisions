@@ -1,8 +1,9 @@
 """Structure-delta mechanism: how the freeze resolved.
 
-Gate 5 slice 1: pure frame arithmetic on hand slices only. No loader
-changes, no fit, no banked deltas. The three components live here so
-slice 3 applies them unchanged to the 1,160 measured receptions.
+Two components that move: press access and compactness, after minus
+before. Open-man counts cut: +0.01 to +0.21 everywhere — repositioning
+without separation, noise with a name. See freeze.md for the same cut
+on the formation side.
 """
 
 from __future__ import annotations
@@ -11,16 +12,10 @@ import math
 from dataclasses import dataclass
 from typing import Dict, List, Tuple
 
-# Open-man threshold: median marking distance on 1,160 banked
-# receptions is 5.64 m; 5 m splits tight (<50% control) from loose
-# (>65% control) coverage. Cited from the pool, not tuned.
-OPEN_MAN_RADIUS_M: float = 5.0
-
 
 @dataclass(frozen=True)
 class StructureDelta:
     press_access_delta_m: float
-    open_men_delta: int
     compactness_delta_m: float
 
 
@@ -41,30 +36,15 @@ def structure_delta(
     """Before/after frame arithmetic. Positive = structure loosened.
 
     Press access: nearest-opponent distance to ball, after minus
-    before. Open men: teammates with separation > OPEN_MAN_RADIUS_M
-    from their nearest opponent, after minus before. Compactness:
-    mean opponent distance to ball, after minus before.
-    Missing actors (untracked at either freeze) are skipped, not
-    zeroed — same reception-conditioning as gate 4.
+    before. Compactness: mean opponent distance to ball, after minus
+    before. Teammate dicts kept for signature stability; the count
+    is gone. Missing actors (untracked at either freeze) are skipped,
+    not zeroed — same reception-conditioning as gate 4.
     """
+    _ = (teammates_before, teammates_after)
     opp_b = list(opponents_before.values())
     opp_a = list(opponents_after.values())
     press = _nearest_opp_dist(ball_after, opp_a) - _nearest_opp_dist(ball_before, opp_b)
-
-    def open_men(
-        mates: Dict[str, Tuple[float, float]], opps: Dict[str, Tuple[float, float]]
-    ) -> int:
-        n = 0
-        for pos in mates.values():
-            if not opps:
-                continue
-            if _nearest_opp_dist(pos, list(opps.values())) > OPEN_MAN_RADIUS_M:
-                n += 1
-        return n
-
-    men = open_men(teammates_after, opponents_after) - open_men(
-        teammates_before, opponents_before
-    )
 
     def compactness(
         ball: Tuple[float, float], opps: List[Tuple[float, float]]
@@ -74,6 +54,5 @@ def structure_delta(
     comp = compactness(ball_after, opp_a) - compactness(ball_before, opp_b)
     return StructureDelta(
         press_access_delta_m=round(press, 2),
-        open_men_delta=men,
         compactness_delta_m=round(comp, 2),
     )

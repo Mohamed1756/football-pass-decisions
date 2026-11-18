@@ -59,12 +59,10 @@ Labels, window, and sample behind the calibration above:
   IDSSE Evaluation still marks the pass, not the touch; the label
   does not exist in any banked pool. Nothing fits without it: one
   label definition, applied to the 1,160 measured receptions.
-- Facing floor: unknown facing taxes the same ignorance twice (0.25 s
-  onto `t_press`, plus 0.25 s onto reception latency). A 0.39 s
-  uniform-expected-turn mean was tried for retention's own latency
-  and cut: the fit ran on 0.25-floor cushions and won (NLL 782.6 vs
-  null 793.3). Retention uses arrival's cushion as-is; its own
-  latency variant waits for pose data, not assertion.
+- Facing floor: unknown facing is taxed twice (0.25 s onto `t_press`,
+  plus 0.25 s onto reception latency) — documented bias, not measured
+  cost. A 0.39 s placeholder mean was tried and cut when the fit won
+  on 0.25-floor cushions. Retention uses arrival's cushion as-is.
 - Marking at receipt, not at decision: `marking_dist_m` is frozen at
   t=0 by arrival's convention (portability over precision, documented
   pro-receiver bias). Live marking stays unscored: the bivariate
@@ -102,11 +100,9 @@ Labels, window, and sample behind the calibration above:
 - Race machinery (`touch_need_s`, `disrupt_time_s`, `RetentionMargin`,
   `retention_margin_s`): the fit voted direct curve (exp-shift NLL
   782.6) — the second race stays a motivating picture, not code.
-- 0.39 s unknown-facing mean: briefly wired into `receiver_readiness`,
-  then reverted — its outputs feed fitted `DECILE_EDGES_S` describing
-  0.25-floor cushions, and the banked 360 pools cannot be re-scored
-  without the raw loader. Rule: never mutate a fitted gate's inputs
-  to fit an unfitted one; each gate owns its latency.
+- 0.39 s unknown-facing mean: cut when the fit won on 0.25-floor
+  cushions. Rule: never mutate a fitted gate's inputs to fit an
+  unfitted one; each gate owns its latency.
 - Any threshold on the old assumed logistic: absolute value was never
   calibrated, ordering only.
 - Named null the fit had to beat: cushion-only logistic, then
