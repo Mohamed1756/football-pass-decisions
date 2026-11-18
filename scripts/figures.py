@@ -169,13 +169,11 @@ def freeze_schematic() -> str:
         '<g font-size="13" fill="#24292f">'
         '<rect x="744" y="112" width="14" height="14" fill="#0969da"/><text x="762" y="124">press access (bar, left m)</text>'
         '<circle cx="751" cy="140" r="6" fill="#cf222e"/><text x="762" y="145">sep. velocity (dot, labeled)</text>'
-        '<g font-size="13" fill="#24292f">'
-        '<circle cx="750" cy="120" r="5" fill="#0969da"/><text x="762" y="125">press access (m)</text>'
-        '<circle cx="750" cy="144" r="5" fill="#cf222e"/><text x="762" y="149">sep. velocity (m/fr)</text>'
         '<text x="740" y="180" font-weight="bold">Takeaway</text>'
         '<text x="740" y="202" font-size="13">Attacking freezes start</text>'
         '<text x="740" y="220" font-size="13">most pressed (7.18 m);</text>'
         '<text x="740" y="238" font-size="13">men close down everywhere</text>'
+        "</g>"
     )
     parts.append("</svg>")
     return "\n".join(parts)

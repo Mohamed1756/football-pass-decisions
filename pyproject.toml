@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "football-passing-chain"
 version = "0.1.0"
-description = "Rank every passing outlet by its arrival cushion: margin = t_press - t_ball"
+description = "Six-gate passing chain (freeze, attempt, choice, arrival, control, resolution) fitted on banked tracking; IDSSE measured truth, 360 and broadcast as context"
 requires-python = ">=3.10"
 dependencies = [
     "numpy>=1.26.0",
