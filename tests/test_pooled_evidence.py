@@ -5,8 +5,11 @@ If a pool changes, this test — not a green suite — says so. Counts are
 exact (failures, n), not rounded rates.
 """
 
+import bisect
 import collections
 import pickle
+
+import numpy as np
 
 from src.models.pressing.calibration import (
     DECILE_EDGES_S,
@@ -78,3 +81,42 @@ def test_canonical_targeted_pool_shape():
     # base incompletion both margins: 2337/14822 = 0.1577 ("16%")
     assert sum(inc for _, inc in frozen) == 2337
     assert sum(inc for _, inc in live) == 2337
+LEAGUES = ("wc2022", "euro2020", "laliga", "euro2024", "wwc2023")
+
+# Leave-one-league-out: edges refit as deciles of the other four
+# leagues' margins, held-out league binned on them. Exact (fail, n)
+# for the endpoint deciles; the gradient is shape, not edges.
+LOLO_ENDPOINTS = {
+    "wc2022": ((763, 3745), (18, 5346)),
+    "euro2020": ((721, 3549), (13, 3318)),
+    "laliga": ((655, 3246), (4, 1851)),
+    "euro2024": ((598, 2762), (5, 3196)),
+    "wwc2023": ((1051, 3810), (18, 3678)),
+}
+
+
+def test_lolo_deciles_survive():
+    five = pickle.load(open("data/pooled/frozen_five_leagues.pkl", "rb"))
+    d1 = {}
+    for held in LEAGUES:
+        train = [r["margin"] for lg in LEAGUES if lg != held for r in five[lg]]
+        edges = [
+            float(np.quantile(train, q))
+            for q in (0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9)
+        ]
+        bins = collections.defaultdict(lambda: [0, 0])
+        for r in five[held]:
+            d = bisect.bisect_right(edges, r["margin"]) + 1
+            inc = 0 if r["complete"] else 1
+            bins[d][0] += inc
+            bins[d][1] += 1
+        rates = [bins[d][0] / bins[d][1] for d in range(1, 11)]
+        assert all(rates[i] > rates[i + 1] for i in range(9)), (held, rates)
+        (f1, n1), (f10, n10) = LOLO_ENDPOINTS[held]
+        assert (bins[1][0], bins[1][1]) == (f1, n1), (held, bins[1])
+        assert (bins[10][0], bins[10][1]) == (f10, n10), (held, bins[10])
+        assert bins[10][0] / bins[10][1] <= 0.005, (held, rates[9])
+        d1[held] = rates[0]
+    for held in ("wc2022", "euro2020", "laliga", "euro2024"):
+        assert 0.19 <= d1[held] <= 0.23, (held, d1[held])
+    assert 0.26 <= d1["wwc2023"] <= 0.29, d1

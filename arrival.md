@@ -85,6 +85,26 @@ Both sides race to the ball-to-runner intercept.
   WWC ~1.5x), not shifted edges: endpoint-proxy refit shows WWC edges
   coincide with WC2022 while rates sit uniformly higher. The ordering
   instrument is pace-free.
+## Leave-one-league-out (edges refit per fold, 171,440 passes)
+
+- Edges refit as deciles of the other four leagues' margins, held-out
+  league binned on them. All ten deciles monotone in every fold:
+
+  held out   d1      d10     gradient   monotone
+  euro2020   0.203   0.0039  52x        yes
+  laliga     0.202   0.0022  93x        yes
+  euro2024   0.217   0.0016  138x       yes
+  wwc2023    0.276   0.0049  56x        yes
+  wc2022     0.204   0.0034  60x        yes
+
+- The WWC level shift persists under refit edges (d1 0.276), so the
+  pace_k story is not an edge artifact. Pinned in
+  test_pooled_evidence (exact endpoint counts, 5x monotone, d10 ≤ 0.005).
+- Portable invariant is monotonicity plus endpoint levels (d1 ≈ 0.20
+  men / 0.27 women, d10 ≤ 0.005), not the multiplier, which runs
+  52–138x across folds. This is the strongest result in the project
+  and it now has the leave-one-league-out it never had.
+
 ## Broadcast replication (20 A-League matches, n=14,822, targeted receivers)
 
 - Sixth dataset, first with real outcomes at tracking scale (pooled

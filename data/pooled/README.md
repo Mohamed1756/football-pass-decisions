@@ -11,7 +11,7 @@ rule that bins everything (WC2022 edges) is the literal
 
 | File | n | Backs |
 |---|---|---|
-| `frozen_five_leagues.pkl` | 171,440 dicts by league (margin, rank, complete) | fig1 five curves, ~100x gradient. **Frozen 360 input: no loader in repo.** Counts: wc2022 41,561; euro2020 33,761; laliga 28,694; euro2024 34,617; wwc2023 32,807 |
+| `frozen_five_leagues.pkl` | 171,440 dicts by league (margin, rank, complete) | fig1 five curves, LOLO-monotone in every fold (52–138x refit gradients; endpoints d1 ≈0.20 men / 0.276 women, d10 ≤0.005). **Frozen 360 input: no loader in repo.** Counts: wc2022 41,561; euro2020 33,761; laliga 28,694; euro2024 34,617; wwc2023 32,807 |
 | `skillcorner_frozen_live.pkl` | 14,814 ×2 (margin, outcome) | fig1 sixth line, first (heuristic) cut. Superseded by the targeted pool below |
 | `skillcorner_targeted_frozen_live.pkl` | 14,822 ×2, targeted receivers | **Canonical broadcast pool.** Pooled-decile d1 0.245 frozen / 0.221 live (same shape, noisier tight top); supersedes heuristic version |
 | `skillcorner_team_margins.pkl` | 14,822 live-presser margins keyed (match, side) → 13 clubs after the match_teams.json join (fig3/table n=13,122 is the plotted labeled-pass subset — recount before reusing) | fig3 team fingerprints (join match.json for names) |
