@@ -81,6 +81,8 @@ def test_canonical_targeted_pool_shape():
     # base incompletion both margins: 2337/14822 = 0.1577 ("16%")
     assert sum(inc for _, inc in frozen) == 2337
     assert sum(inc for _, inc in live) == 2337
+
+
 LEAGUES = ("wc2022", "euro2020", "laliga", "euro2024", "wwc2023")
 
 # Leave-one-league-out: edges refit as deciles of the other four
