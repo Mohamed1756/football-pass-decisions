@@ -60,7 +60,7 @@ transfer fails; only ordering transfers.
 
 | Comparison | Join needed | Verdict |
 |---|---|---|
-| rank-0 choice 0.41–0.44 (360, in-frame sets) vs 0.00–0.25 (IDSSE, full-pitch, 8.7 outlets/pass) | common choice-set definition | Not joinable from banked pools. Uniform baselines differ mechanically (~1/3 360 per the calibration analysis, unverifiable from banked rows which lack set sizes, vs 1/8.65 IDSSE); IDSSE passers sit below uniform, 360 above. Unidentified until set definitions match. |
+| rank-0 choice 0.41–0.44 (360, in-frame sets) vs 0.00–0.25 (IDSSE, full-pitch, 8.7 outlets/pass) | common choice-set definition | Not joinable from banked pools. Uniform baselines differ mechanically (~1/3 360 per the calibration analysis, unverifiable from banked rows which lack set sizes, vs 1/8.7 IDSSE); IDSSE passers sit below uniform, 360 above. Unidentified until set definitions match. |
 | control levels (IDSSE n=1,160) on 360 margins | touch labels on 360 (don't exist) | Forbidden by retention.md, enforced by `run_outlet`'s source flag. Ordering-only on 360. |
 | 360 decile edges on IDSSE margins | same-n, both binnings labeled | Survives as labeled comparison (`reproduce.py` prints it). `run_outlet`'s risk field is out-of-scale on measured inputs (see pipeline docstring). |
 | "passers complete 60–100%" vs control 0.43–0.71 | complete × controlled join | Joinable: P(control \| complete) = 0.596, pinned in test_retention_fit. Prose mixing the labels uses the join. |

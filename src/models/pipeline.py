@@ -57,13 +57,13 @@ def run_outlet(
     source refuses ordering-only inputs: "frozen" (360 snapshots)
     raises ValueError — rank outlets with rank_outlets and bin with
     margin_decile instead of scoring levels here. What the flag does
-    not do is validate scale. Scoring stays frozen-model regardless:
-    arrival runs the frozen flight estimator (no measured flight, no
-    live pressers), so control_prob on a frozen cushion is
-    ordering-only — calibrated IDSSE levels need measured flight
-    (reconciliation is Q8 work, not this flag). source="tracking"
-    means the caller asserts non-360 inputs, not that the computation
-    honors their scale.
+    not do is validate scale. Scoring stays frozen-model regardless
+    (no measured flight, no live pressers), so control_prob on a
+    frozen cushion is ordering-only — calibrated IDSSE levels need
+    measured flight. Reconciliation needs measured-scale edges the
+    pools can't yet support (pooled README, Joins); run-layer work,
+    not this flag. source="tracking" means the caller asserts
+    non-360 inputs, not that the computation honors their scale.
     """
     if source not in ("tracking", "frozen"):
         raise ValueError(f"source must be 'tracking' or 'frozen', got {source!r}")
