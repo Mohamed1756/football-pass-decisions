@@ -89,11 +89,11 @@ LEAGUES = ("wc2022", "euro2020", "laliga", "euro2024", "wwc2023")
 # leagues' margins, held-out league binned on them. Exact (fail, n)
 # for the endpoint deciles; the gradient is shape, not edges.
 LOLO_ENDPOINTS = {
-    "wc2022": ((763, 3745), (18, 5346)),
-    "euro2020": ((721, 3549), (13, 3318)),
-    "laliga": ((655, 3246), (4, 1851)),
-    "euro2024": ((598, 2762), (5, 3196)),
-    "wwc2023": ((1051, 3810), (18, 3678)),
+    "wc2022": ((764, 3753), (18, 5322)),
+    "euro2020": ((722, 3556), (13, 3302)),
+    "laliga": ((656, 3255), (4, 1844)),
+    "euro2024": ((600, 2770), (5, 3180)),
+    "wwc2023": ((1053, 3818), (18, 3668)),
 }
 
 
@@ -108,7 +108,9 @@ def test_lolo_deciles_survive():
         ]
         bins = collections.defaultdict(lambda: [0, 0])
         for r in five[held]:
-            d = bisect.bisect_right(edges, r["margin"]) + 1
+            # Left-closed, like margin_decile (m <= edge falls lower):
+            # one binning rule for the whole project.
+            d = bisect.bisect_left(edges, r["margin"]) + 1
             inc = 0 if r["complete"] else 1
             bins[d][0] += inc
             bins[d][1] += 1
