@@ -107,6 +107,8 @@ def test_structure_delta_means_pinned():
     comp = np.array([r["delta_compact_m"] for r in rows])
     assert abs(press.mean() - DELTA_PRESS_MEAN) < 0.02
     assert abs(comp.mean() - DELTA_COMPACT_MEAN) < 0.02
+
+
 def test_q1_bias_pinned():
     import numpy as np
 
