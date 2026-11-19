@@ -48,4 +48,4 @@ def test_choice_top2_robust_to_tail():
         kept = [r for r in rows if r["rank"] <= 6]
         assert len(rows) - len(kept) < 300
         renorm = sum(1 for r in kept if r["rank"] <= 1) / len(kept)
-        assert 0.0 <= renorm - full < 0.01, (league, full, renorm)
+        assert 0.0 <= renorm - full < 0.007, (league, full, renorm)

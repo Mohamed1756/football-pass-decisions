@@ -30,12 +30,15 @@ pool fits, not the person (passer-trait null stands at corr 0.01–0.02).
   renormalizing moves top-2 by +0.004 to +0.006 per league.
   Pinned in test_choice_shares.
 - Unconditioned on choice-set size: rows carry (margin, rank,
-  complete) with no n_outlets, and 2-outlet sets take top-2
-  mechanically. Removing all rank-1 rows gives 0.571, but that is an
-  extreme scenario, not a bound — it assumes every rank-1 row is a
-  mechanical 2-outlet take and no rank-0 row is, against the
-  margin-preference direction. The 2-outlet mass is unidentified from
-  this pool, so the headline stays unconditioned until the re-bank.
+  complete) with no n_outlets, and 1- and 2-outlet sets take top-2
+  mechanically. Direction is identified even though the mass is not:
+  0.677 is an upper bound on the ≥3-outlet top-2 share — any
+  mechanical small-set mass pulls it down. Removing all rank-1 rows
+  gives 0.571, but that is an extreme scenario, not a bound — it
+  assumes every rank-1 row is a mechanical small-set take and no
+  rank-0 row is, against the margin-preference direction. The
+  small-set mass is unidentified from this pool, so the headline
+  stays unconditioned until the re-bank.
 
 ## What the fit banked
 
