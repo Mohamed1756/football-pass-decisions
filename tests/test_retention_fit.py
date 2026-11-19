@@ -107,3 +107,38 @@ def test_structure_delta_means_pinned():
     comp = np.array([r["delta_compact_m"] for r in rows])
     assert abs(press.mean() - DELTA_PRESS_MEAN) < 0.02
     assert abs(comp.mean() - DELTA_COMPACT_MEAN) < 0.02
+def test_q1_bias_pinned():
+    import numpy as np
+
+    rows = pickle.load(open(RETENTION_LABELED_PATH, "rb"))
+    pairs = [_row(r) for r in rows]
+    cs = sorted(c for c, _ in pairs)
+    q = np.quantile(cs, [i / 10 for i in range(1, 10)])
+    q1 = [r for r in rows if not any(r["cushion_s"] > e for e in q)]
+    assert len(q1) == 116
+    assert sum(1 for r in q1 if r["controlled"]) == 50
+    tight = [r for r in q1 if r["marking_dist_m"] <= 2.5]
+    loose = [r for r in q1 if r["marking_dist_m"] > 2.5]
+    assert (sum(1 for r in tight if r["controlled"]), len(tight)) == (20, 58)
+    assert (sum(1 for r in loose if r["controlled"]), len(loose)) == (30, 58)
+    fitted_mean = sum(fitted_control_prob(r["cushion_s"]) for r in q1) / len(q1)
+    assert abs(fitted_mean - DECILE_FIT[0]) < 0.005
+    # Match-clustered bootstrap (fixed seed): q1 misfit is bias, not
+    # noise — the fitted mean sits outside the 95% interval.
+    by_match = {}
+    for r in rows:
+        by_match.setdefault(r["match"], []).append(r)
+    matches = sorted(by_match)
+    rng = np.random.default_rng(7)
+    stats = []
+    for _ in range(2000):
+        samp = rng.choice(matches, size=len(matches), replace=True)
+        sub = [
+            r
+            for m in samp
+            for r in by_match[m]
+            if not any(r["cushion_s"] > e for e in q)
+        ]
+        stats.append(sum(1 for r in sub if r["controlled"]) / len(sub))
+    lo, hi = float(np.quantile(stats, 0.025)), float(np.quantile(stats, 0.975))
+    assert fitted_mean < lo, (fitted_mean, lo, hi)
