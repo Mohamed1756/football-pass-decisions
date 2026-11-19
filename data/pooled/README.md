@@ -73,3 +73,17 @@ The IDSSE 1,160 denominators are short-pass-selected by construction:
 `_reception_point` takes the first ball position within 2 m inside 1 s
 of flight, so banked t_ball tops out at 1.00 s (~21 m). Retention and
 hold fits inherit that truncation alongside arrival.
+## Monitoring / recalibration triggers
+
+Every gate note promises recalibration on post-deployment sets. This
+is the spec that promise points at. On any new pool recompute:
+(a) rank-0 choice share, (b) frozen-edge d1 incompletion rate,
+(c) control rate. Alert thresholds (operational choices, not derived):
+rank-0 share shifts >0.05 absolute, d1 rate shifts >0.03 absolute,
+control rate outside the banked match-clustered 95% CI. Crossing a
+threshold means refit before trusting levels; ordering claims survive
+threshold breaches unless the monotone shape itself breaks (see LOLO).
+Pre-deployment Goodhart testing is impossible by construction — no
+pool exists of passers optimizing this instrument — so the caveat
+stays prose until the first post-deployment pool lands. No monitor
+script is banked: it gets written against that pool, not this one.

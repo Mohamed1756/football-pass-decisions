@@ -9,7 +9,7 @@ Winner params live in mechanism (single home); this file pins NLLs.
 import math
 import pickle
 
-from src.models.retention.mechanism import fitted_control_prob
+from src.models.retention.mechanism import FIT_C0, FIT_LAM, fitted_control_prob
 
 
 def _touch_curve_logistic_null(cushion_s: float) -> float:
@@ -157,3 +157,61 @@ def test_q1_bias_pinned():
         stats.append(sum(1 for r in sub if r["controlled"]) / len(sub))
     lo, hi = float(np.quantile(stats, 0.025)), float(np.quantile(stats, 0.975))
     assert fitted_mean < lo, (fitted_mean, lo, hi)
+# Bank processing order, not calendar order (raw not vendored, dates
+# unrecoverable): first 3 vs last 4 of the label script's match list.
+# Levels move across splits (control 0.592 vs 0.533, hold 2.36 vs
+# 1.80, dpress -1.11 vs -0.44); curve shape transfers — the first-3
+# refit gains 4.9 in-sample but costs only 1.8 on held-out last-4,
+# net wash. Heterogeneity is real; the functional form holds.
+SPLIT_FIRST = ("J03WMX", "J03WN1", "J03WOH")
+
+LATTICE_LAM = (0.30, 0.325, 0.35, 0.375, 0.40, 0.425, 0.45, 0.475, 0.50)
+LATTICE_C0 = (
+    -1.75,
+    -1.70,
+    -1.65,
+    -1.60,
+    -1.55,
+    -1.50,
+    -1.45,
+    -1.40,
+    -1.35,
+    -1.30,
+    -1.25,
+)
+
+
+def _split_nll(sub, lam, c0) -> float:
+    s = 0.0
+    for r in sub:
+        p = 1.0 - math.exp(-lam * (r["cushion_s"] - c0)) if r["cushion_s"] > c0 else 0.0
+        p = min(max(p, 1e-9), 1 - 1e-9)
+        y = 1 if r["controlled"] else 0
+        s -= y * math.log(p) + (1 - y) * math.log(1 - p)
+    return s
+
+
+def test_bank_order_split_pinned():
+    import numpy as np
+
+    rows = pickle.load(open(RETENTION_LABELED_PATH, "rb"))
+    a = [r for r in rows if r["match"] in SPLIT_FIRST]
+    b = [r for r in rows if r["match"] not in SPLIT_FIRST]
+    assert (len(a), len(b)) == (682, 478)
+    assert sum(1 for r in a if r["controlled"]) == 404
+    assert sum(1 for r in b if r["controlled"]) == 255
+    assert abs(float(np.median([r["hold_s"] for r in a])) - 2.36) < 0.03
+    assert abs(float(np.median([r["hold_s"] for r in b])) - 1.80) < 0.03
+    assert abs(float(np.mean([r["delta_press_m"] for r in a])) - (-1.11)) < 0.03
+    assert abs(float(np.mean([r["delta_press_m"] for r in b])) - (-0.44)) < 0.03
+    pooled_a = _split_nll(a, FIT_LAM, FIT_C0)
+    pooled_b = _split_nll(b, FIT_LAM, FIT_C0)
+    best = min(_split_nll(a, lam, c0) for lam in LATTICE_LAM for c0 in LATTICE_C0)
+    assert abs(pooled_a - 453.7) < 1.0
+    assert abs(best - 448.9) < 1.0
+    assert pooled_a - best > 3.0  # refit actually moves in-sample
+    refit = min(
+        ((lam, c0) for lam in LATTICE_LAM for c0 in LATTICE_C0),
+        key=lambda p: _split_nll(a, p[0], p[1]),
+    )
+    assert abs(_split_nll(b, refit[0], refit[1]) - pooled_b) < 2.0

@@ -84,7 +84,11 @@ Both sides race to the ball-to-runner intercept.
   environment takes a level multiplier instead (`decile_risk` pace_k,
   WWC ~1.5x), not shifted edges: endpoint-proxy refit shows WWC edges
   coincide with WC2022 while rates sit uniformly higher. The ordering
-  instrument is pace-free.
+  instrument is pace-free. This replication is cross-sectional
+  portability, not Goodhart immunity: five leagues of pre-instrument
+  passing say nothing about passers optimizing the instrument once it
+  ships — the monitoring triggers in pooled README are the drift
+  contract, not this section.
 ## Leave-one-league-out (edges refit per fold, 171,440 passes)
 
 - Edges refit as deciles of the other four leagues' margins, held-out
