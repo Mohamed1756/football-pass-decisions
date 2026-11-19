@@ -54,10 +54,16 @@ def run_outlet(
     Unscorable arrival (-99) propagates:
     risk None, control 0, loosen 0, value 0 — never a fitted number.
 
-    source gates portability: fitted control levels and frozen decile
-    edges apply to tracking-scale inputs only. "frozen" (360 snapshots,
-    ordering only) raises ValueError — rank outlets with rank_outlets
-    and bin with margin_decile instead of scoring levels here.
+    source refuses ordering-only inputs: "frozen" (360 snapshots)
+    raises ValueError — rank outlets with rank_outlets and bin with
+    margin_decile instead of scoring levels here. What the flag does
+    not do is validate scale. Scoring stays frozen-model regardless:
+    arrival runs the frozen flight estimator (no measured flight, no
+    live pressers), so control_prob on a frozen cushion is
+    ordering-only — calibrated IDSSE levels need measured flight
+    (reconciliation is Q8 work, not this flag). source="tracking"
+    means the caller asserts non-360 inputs, not that the computation
+    honors their scale.
     """
     if source not in ("tracking", "frozen"):
         raise ValueError(f"source must be 'tracking' or 'frozen', got {source!r}")

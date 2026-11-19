@@ -69,8 +69,9 @@ from src.models.pressing.types import PressingActor
 
 receiver = PressingActor(track_id=9, team_id="own", pos_m=PitchPoint(86.0, 25.0))
 presser = PressingActor(track_id=1, team_id="opp", pos_m=PitchPoint(87.5, 26.5))
-# tracking-scale inputs only: fitted control levels and decile edges
-# don't apply to frozen 360 snapshots (ordering only, retention.md).
+# non-360 inputs only (frozen 360 snapshots carry ordering only and
+# raise). Scoring stays frozen-model: control_prob here is
+# ordering-only, not a calibrated IDSSE level (see pipeline docstring).
 out = run_outlet(receiver, [presser], PitchPoint(100.0, 29.0), source="tracking")
 print(out.margin_s, out.control_prob, out.loosen_prob_given_control, out.value)
 print("joint loosening:", out.control_prob * out.loosen_prob_given_control)
