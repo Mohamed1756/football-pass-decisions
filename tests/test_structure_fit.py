@@ -40,6 +40,8 @@ def test_zone_means_pinned():
         assert len(sub) == n, (zone, ctl, len(sub))
         assert abs(np.mean([r["delta_press_m"] for r in sub]) - press) < 0.03
         assert abs(np.mean([r["delta_compact_m"] for r in sub]) - comp) < 0.03
+
+
 # (zone, controlled) -> (n, P(delta_press>0), P(delta_press>2), q90), rates ±0.01.
 RIGHT_TAIL = {
     ("def", True): (180, 0.356, 0.161, 2.96),
