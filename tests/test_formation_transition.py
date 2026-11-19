@@ -6,7 +6,9 @@ not noise at n=1,152 (MDE |r|>=0.082 at 80% power, alpha=0.05 two-sided).
 The pairing is diluted: median gap 8.6 s between linked pass_idx values,
 q75 40.5 s, only 39% within 5 s. Gap<=5 s subset (n=452): r=+0.25.
 Previous-controlled subset (n=655, the freeze.md conditioning): r=+0.02,
-null. Positive delta = structure loosened = more open, so 6.34 m after
+null. Gap<=5 s split: previous-uncontrolled r=+0.42 (n=227, phase-reset);
+previous-controlled r=+0.13 (n=225, underpowered, MDE 0.19).
+Positive delta = structure loosened = more open, so 6.34 m after
 loosening vs 5.73 m after tightening runs with persistence; the loop
 hypothesis predicted the opposite sign (loosening followed by tighter
 press). No usable loop signal either way; the 0<->5 recurrence stays
@@ -28,6 +30,10 @@ CORR_GAP5: float = 0.253
 LINKED_N_CONTROLLED: int = 655
 CORR_CONTROLLED: float = 0.017
 SPEARMAN_ALL: float = 0.046
+LINKED_N_GAP5_UNCONTROLLED: int = 227
+CORR_GAP5_UNCONTROLLED: float = 0.419
+LINKED_N_GAP5_CONTROLLED: int = 225
+CORR_GAP5_CONTROLLED: float = 0.128
 
 
 def _linked_pairs() -> list:
@@ -76,11 +82,35 @@ def test_loop_null_pins():
 def test_loop_gap5_pins():
     # Consecutive banked rows are not consecutive possession events
     # (failed receptions drop rows); gap is the start-frame delta at
-    # 25 Hz, a proxy that overstates the reception gap by ball flight.
+    # 25 Hz, which approximates the reception gap to within the
+    # flight-time difference.
     pairs = [p for p in _linked_pairs() if p[2] <= GAP_S]
     assert len(pairs) == LINKED_N_GAP5
     assert (
         abs(_pearson([p[0] for p in pairs], [p[1] for p in pairs]) - CORR_GAP5) < 0.02
+    )
+
+
+def test_loop_gap5_turnover_pins():
+    # The +0.25 gap<=5 s signal lives in turnover pairs: the next
+    # reception is a new phase and the defense is still converging.
+    pairs = [p for p in _linked_pairs() if p[2] <= GAP_S and not p[3]]
+    assert len(pairs) == LINKED_N_GAP5_UNCONTROLLED
+    assert (
+        abs(
+            _pearson([p[0] for p in pairs], [p[1] for p in pairs])
+            - CORR_GAP5_UNCONTROLLED
+        )
+        < 0.02
+    )
+    controlled = [p for p in _linked_pairs() if p[2] <= GAP_S and p[3]]
+    assert len(controlled) == LINKED_N_GAP5_CONTROLLED
+    assert (
+        abs(
+            _pearson([p[0] for p in controlled], [p[1] for p in controlled])
+            - CORR_GAP5_CONTROLLED
+        )
+        < 0.02
     )
 
 

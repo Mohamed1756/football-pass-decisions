@@ -14,7 +14,7 @@ through the shared banked pool, not yet through one entry call.
 
 ## Freeze
 
-Press access and separation velocity at t=0, measured over the 5 s of off-ball movement that produced the choice set. The loop from loosening back to openness does not close (corr +0.10 on 1,152 linked pairs — architecture, not evidence).
+Press access and separation velocity at t=0, measured over the 5 s of off-ball movement that produced the choice set. The 0↔5 loop does not close: previous-controlled pairs show corr +0.02 (n=655); the unfiltered +0.10 is diluted pairing, not evidence (freeze.md).
 
 ![Pre-freeze shape by zone](docs/figs/fig10_freeze_schematic.svg)
 

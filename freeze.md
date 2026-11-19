@@ -30,7 +30,10 @@ Regress pre-pass press access on previous-pass press-delta. Unfiltered
 1,152 linked pairs: Pearson +0.10, Spearman +0.05 (R2~=1%). Detected at
 n=1,152, not noise, and not usable. The pairing is diluted (median gap
 8.6 s between linked rows, 39% within 5 s); gap<=5 s subset (n=452)
-gives r=+0.25. Under the stated conditioning (previous reception
+gives r=+0.25. Detected (R2~=6%, t=5.54), carried by turnover pairs
+(previous uncontrolled: r=+0.42, n=227); the controlled intersection
+(n=225, r=+0.13) is underpowered (MDE 0.19). The signal is phase-reset,
+not a gate-5→gate-0 loop. Under the stated conditioning (previous reception
 controlled, n=655) r=+0.02, null. Positive delta means loosened, so
 6.34 m after loosening vs 5.73 m after tightening runs with persistence;
 the loop hypothesis predicted tightening after loosening. The 0↔5
