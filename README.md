@@ -20,7 +20,7 @@ Press access and separation velocity at t=0, measured over the 5 s of off-ball m
 
 ## Attempt
 
-Hold duration given control, by reception zone. Median 2.16 s overall (q25 1.36, q75 3.92); mid moves it quickest at 0.703 pass-within-3 s. Pass exits dominate in all zones (958/1160). The unplayed ball stays unobserved.
+Hold duration given receipt, by reception zone. Median 2.16 s overall (2.40 s controlled-only); mid moves it quickest under both conditionings (0.703 pass-within-3 s; 0.664 controlled). Pass exits dominate (958/1160); stoppage is a structural zero. The unplayed ball stays unobserved.
 
 ![Hold duration by zone](docs/figs/fig11_hold_by_zone.svg)
 

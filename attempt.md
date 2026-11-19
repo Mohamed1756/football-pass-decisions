@@ -19,7 +19,9 @@ Headline object is the distribution: report median hold (holds skew
 right; mean follows outliers) with the 3 s pass rate as diagnostic.
 The 3 s is reused from gate 5's pinned timescale (median next-pass
 2.4 s) to keep the gates comparable — an independent hold-duration
-derivation would be cleaner, sensitivity at ±1 s untested either way.
+derivation would be cleaner. Ordering is not knife-edge at 3 s: mid
+leads at T=2 and T=4 as well (pass-within-T 0.503/0.806 all receptions,
+0.433/0.801 controlled-only), so the ±1 s band changes levels, not ranks.
 
 ## Why not whether
 
