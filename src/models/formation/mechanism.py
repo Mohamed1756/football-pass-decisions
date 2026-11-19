@@ -36,7 +36,10 @@ def formation_window(
     teammate_tracks maps each teammate to its positions over [-5 s, 0],
     oldest first, same frame rate throughout. Separation velocity is the
     mean per-teammate rate of change of nearest-opponent distance over
-    the window: positive = men getting opener into the freeze.
+    the window, opponents frozen at t=0 for both endpoints: teammate
+    motion relative to the final shape, not separation dynamics —
+    positive = men getting opener into the freeze, under the same
+    frozen-snapshot convention as the rest of the instrument.
     teammates_at_freeze kept for signature stability; the resolution
     side needs no per-teammate positions once counts are cut.
     Missing tracks (untracked at any window frame) are skipped, same

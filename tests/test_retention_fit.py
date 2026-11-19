@@ -163,8 +163,11 @@ def test_q1_bias_pinned():
 # unrecoverable): first 3 vs last 4 of the label script's match list.
 # Levels move across splits (control 0.592 vs 0.533, hold 2.36 vs
 # 1.80, dpress -1.11 vs -0.44); curve shape transfers — the first-3
-# refit gains 4.9 in-sample but costs only 1.8 on held-out last-4,
-# net wash. Heterogeneity is real; the functional form holds.
+# refit on the stated local lattice (c0 in [-1.75, -1.25], a
+# neighborhood of the pooled -1.50) gains 4.8 in-sample but costs only
+# 1.8 on held-out last-4, net wash. The unrestricted first-3 optimum
+# sits at c0 = -2.10 and transfers at -0.4, so shape stability holds
+# globally too. Heterogeneity is real; the functional form holds.
 SPLIT_FIRST = ("J03WMX", "J03WN1", "J03WOH")
 
 LATTICE_LAM = (0.30, 0.325, 0.35, 0.375, 0.40, 0.425, 0.45, 0.475, 0.50)

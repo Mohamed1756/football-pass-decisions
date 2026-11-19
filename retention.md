@@ -15,11 +15,10 @@ speed where tracking carries it, sprint-cap fallback where it doesn't.
 Wrong-able like everything else — the fit's job is to break it.
 
 `P(control | cushion, marking)` — cushion is the post-touch time
-left (`post_cushion_s`), marking is the presser's live distance at
-the reception instant (advanced by gated velocity over `t_ball`
-where tracking carries velocities; frozen at t=0 only where it
-doesn't — convention inherited from arrival, portability cost named
-below). Both already computable; neither yet calibrated against a
+left (`post_cushion_s`), marking is the nearest other actor's
+distance at the reception instant (teammates included — the loader
+loop has no team filter, so this is proximity, not presser distance).
+Both already computable; neither yet calibrated against a
 touch label.
 
 - The mechanism is multiplicative until the fit says otherwise:
@@ -52,7 +51,9 @@ touch label.
 - Marking residual confirmed but unscored: within-cushion-band splits
   separate 0.36 vs 0.53 (tight) to 0.61 vs 0.75 (loose), and in q1
   tight marking (≤2.5 m) controls 0.345 vs 0.517 loose (n=58/58) —
-  the tightest cushions are where the ignored marking term bites.
+  the tightest cushions are where the ignored marking term bites,
+  with the caveat that the split is partly teammate proximity (the
+  banked marking has no team filter).
   Yet the bivariate discount buys only dNLL 1.2 — real but below the
   bar. Alternatives checked on the same 1,160 rows fix the tails
   without clearing it: 3-param asymptote (A=0.80, λ=0.60, c0=−1.75)
@@ -76,9 +77,9 @@ Labels, window, and sample behind the calibration above:
   plus 0.25 s onto reception latency) — documented bias, not measured
   cost. A 0.39 s placeholder mean was tried and cut when the fit won
   on 0.25-floor cushions. Retention uses arrival's cushion as-is.
-- Marking at receipt, not at decision: `marking_dist_m` is frozen at
-  t=0 by arrival's convention (portability over precision, documented
-  pro-receiver bias). Live marking stays unscored: the bivariate
+- Marking at receipt, not at decision: `marking_dist_m` is the
+  nearest other actor frozen at t=0 (teammates included; portability
+  over precision, documented pro-receiver bias). Live marking stays
   discount buys dNLL 1.2 on 1,160 rows — real but below the bar.
   Revisit trigger: n≥5,000 labeled touches or pose-derived facing,
   whichever first; the joint form needs dNLL ≥ 10 on the same pools

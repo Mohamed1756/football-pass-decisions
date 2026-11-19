@@ -17,7 +17,8 @@ shape (pinned null in test_hold_freeze_null).
 
 - Press access at freeze: nearest-opponent distance to ball at t=0.
 - Separation velocity: mean rate of change of open-man separation
-  over [−5 s, 0]. Positive = men getting opener into the freeze.
+  over [−5 s, 0], opponents frozen at t=0 — teammate motion relative
+  to the final shape. Positive = men getting opener into the freeze.
   The one component gate 5 has no mirror for — formation is a
   derivative, resolution is a state.
 
