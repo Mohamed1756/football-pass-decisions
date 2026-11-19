@@ -77,7 +77,8 @@ question is deferred with the n to deserve it.
   next-timestamp; pairs across tracking gaps are not dropped, so a
   "pass" exit can be the opponent's pass after an unannotated turnover.
 - Minimum n: 1,160 intervals, continuous times — SE on a mean, same
-  comfort as gate 5.
+  comfort as gate 5. Same short-pass selection (2 m / 1 s reception
+  rule, t_ball ≤ 1.00 s — see pooled README).
 - Sources: IDSSE only for the fit. Same replication ladder as gates 4–5.
 
 ## Deleted before fitting

@@ -86,9 +86,11 @@ Labels, window, and sample behind the calibration above:
   display, never fit.
 - Minimum n: 1,160 binary labels over cushion deciles is ~116/bin
   — workable for curve shape, but the per-bin SE ≈ 0.05 at p = 0.5
-  is IID. Matches run control 0.366–0.644, and match-clustered
-  intervals run ~4x wider (overall 95% CI [0.49, 0.61] vs ±0.03
-  IID): rate claims on IDSSE labels use clustered intervals.
+  is IID, and the 1,160 are short-pass-selected (2 m / 1 s reception
+  rule, t_ball ≤ 1.00 s — see pooled README). Matches run control
+  0.366–0.644, and match-clustered intervals run ~4x wider (overall
+  95% CI [0.49, 0.61] vs ±0.03 IID): rate claims on IDSSE labels use
+  clustered intervals.
   Bivariate with a marking split halves it (~58/cell): enough to
   test the discount, not to fit it finely. The tight-quintile team
   splits (Perth 0.318 vs City 0.140) motivate but cannot validate —

@@ -7,10 +7,10 @@ exact (failures, n), not rounded rates.
 
 import bisect
 import collections
+import json
 import pickle
 
 import numpy as np
-
 from src.models.pressing.calibration import (
     DECILE_EDGES_S,
     DECILE_INCOMPLETION_RATE,
@@ -124,3 +124,48 @@ def test_lolo_deciles_survive():
     for held in ("wc2022", "euro2020", "laliga", "euro2024"):
         assert 0.19 <= d1[held] <= 0.23, (held, d1[held])
     assert 0.26 <= d1["wwc2023"] <= 0.29, d1
+# Per-team ns from the match_teams.json join (reproduce.py logic).
+# fig3/table plot 13,122 labeled passes; the pool banks 14,822 live
+# rows, all with int outcomes — the 1,700-row plot filter is unbanked,
+# so the banked side is pinned here and the plot n must be recounted,
+# never assumed, downstream.
+TEAM_NS = {
+    "Adelaide United": 1259,
+    "Auckland FC": 2450,
+    "Brisbane FC": 1187,
+    "CC Mariners": 1227,
+    "Macarthur FC": 617,
+    "Melbourne City": 1541,
+    "Melbourne V FC": 1544,
+    "Newcastle": 364,
+    "Perth Glory": 662,
+    "Sydney FC": 798,
+    "Wellington P FC": 1018,
+    "Western Sydney": 814,
+    "Western United": 1341,
+}
+
+
+def test_team_join_recovers_banked_counts():
+    fp = pickle.load(open("data/pooled/skillcorner_team_margins.pkl", "rb"))
+    assert len(fp) == 40
+    assert sum(len(v) for v in fp.values()) == 14822
+    meta = json.load(open("data/pooled/match_teams.json"))
+    assert len(meta) == 20
+    teams = collections.defaultdict(list)
+    skipped = 0
+    for (mid, side), rows in fp.items():
+        if mid not in meta:
+            skipped += len(rows)
+            continue
+        teams[meta[mid][side]].extend(rows)
+    assert skipped == 0
+    assert sum(len(v) for v in teams.values()) == 14822
+    assert set(teams) == set(TEAM_NS)
+    for t, n in TEAM_NS.items():
+        assert len(teams[t]) == n, (t, len(teams[t]))
+    assert all(
+        isinstance(r, (list, tuple)) and r[1] is not None
+        for v in fp.values()
+        for r in v
+    )

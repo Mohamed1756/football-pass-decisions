@@ -30,9 +30,13 @@ FIT_NLL: float = 782.6
 NULL_NLL: float = 793.3
 ASSUMED_NLL: float = 3205.1
 
-# Counts that pin the pool: n and controls.
+# Counts that pin the pool: n, controls, and completions. Complete and
+# controlled are different labels: P(control | complete) = 0.596, the
+# join prose mixing them must use.
 POOL_N: int = 1160
 POOL_CONTROLS: int = 659
+POOL_COMPLETED: int = 1024
+CONTROL_GIVEN_COMPLETE: float = 0.596
 
 # Structure-delta means on the same 1,160 (all rows have +3 s windows):
 # the average completed pass tightens structure — value is in the
@@ -67,6 +71,15 @@ def test_winner_beats_null_and_assumed():
     assert len(rows) == POOL_N
     pairs = [_row(r) for r in rows]
     assert sum(y for _, y in pairs) == POOL_CONTROLS
+    completed = [r for r in rows if r["complete"]]
+    assert len(completed) == POOL_COMPLETED
+    assert (
+        abs(
+            sum(1 for r in completed if r["controlled"]) / len(completed)
+            - CONTROL_GIVEN_COMPLETE
+        )
+        < 0.005
+    )
     null_rows = sum(y for _, y in pairs) / len(pairs)
     null = -sum(
         y * math.log(null_rows) + (1 - y) * math.log(1 - null_rows) for _, y in pairs
