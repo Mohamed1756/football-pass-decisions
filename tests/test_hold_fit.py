@@ -48,6 +48,8 @@ def test_hold_fit_pinned():
         assert (
             abs(sum(1 for r in passes if r["hold_s"] <= 3.0) / len(passes) - p3) < 0.01
         )
+
+
 def test_hold_fit_controlled_pinned():
     rows = pickle.load(open(RETENTION_LABELED_PATH, "rb"))
     assert sum(1 for r in rows if r["hold_exit"] == "stoppage") == 0
