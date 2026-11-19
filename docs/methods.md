@@ -17,7 +17,8 @@ tighter than which.
 
 Evidence: bottom decile fails at 20–27%, top at 0.2–0.5%, monotone
 falling across all ten deciles on each of the five 360 leagues on
-frozen WC2022 edges (`docs/figs/fig1_decile_curves.png`). Rank 0 fails
+frozen WC2022 edges (frozen figure `docs/figs/fig1_decile_curves.png`;
+see pooled README Figure provenance). Rank 0 fails
 at 0.02–0.05; failure rises with chosen rank to rank 6, tail pooled
 past noise. Tracking pools grade on pooled deciles — same shape,
 noisier tail; see `data/pooled/README.md` "Binning rule".
@@ -40,7 +41,7 @@ decile_risk(1)          # 0.204 — WC2022 baseline
 decile_risk(1, pace_k=1.5)  # 0.306 — approximates the WWC2023 level
 ```
 
-![Same freeze, two paces](figs/fig7_risk_surface.svg)
+![Same freeze, two paces (frozen illustration of the pace_k scaling)](figs/fig7_risk_surface.svg)
 
 ## 3. Measure seconds where tracking exists
 
@@ -68,7 +69,7 @@ rediscover it:
 - It ranks outlets given an attempt. When or whether to pass is
   unobserved — no event+tracking dataset records the ball not played.
 - It does not rank passers. Full-pitch choice sets on IDSSE show
-  rank-0 choice at 0.00–0.20 with no link to completion: passers
+  rank-0 choice at 0.00–0.25 with no link to completion: passers
   optimize something the margin doesn't see.
 - Seconds from the frozen model are inflated. Trust the ordering, not
   the clock — unless you measured the flight.

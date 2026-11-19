@@ -33,8 +33,8 @@ No script in this repo generates the figures: they are frozen binaries.
 prints for the five 360 curves; its broadcast sixth line is the
 superseded heuristic cut (`skillcorner_frozen_live.pkl`, n=14,814,
 frozen-edge d1 1946/8642 = 0.225), kept as published — the canonical
-targeted cut (n=14,822, d1 1948/8645 = 0.225) agrees to 1e-4 there,
-so the plotted line stands. `fig3`, `fig5`, `fig6`, `fig7` are
+targeted cut (n=14,822, d1 1948/8645 = 0.225) agrees to ≤0.003 across
+deciles (1e-4 at d1, max 0.0029 at d9), so the plotted line stands. `fig3`, `fig5`, `fig6`, `fig7` are
 hand-built SVGs/PNGs from the commits named in git history (`cef4edf`
 started fig1 as a tracked SVG; `4b7aeef` rendered the PNG; `f843448`
 added fig7). Uneditable without the source data + a plotting script:

@@ -1,7 +1,9 @@
 """Banked-figure builder: SVG from pinned test constants, no raw needed.
 
-Each figure reads its numbers from the test file that pins them, so
-a figure can never drift from the evidence. Run on demand, not in CI.
+Each generated figure (8-12) reads its numbers from the test file that
+pins them, so a generated figure can never drift from the evidence.
+Frozen figures (1, 3, 5, 6, 7) have no builder; see data/pooled/README
+Figure provenance. Run on demand, not in CI.
 """
 
 import sys
