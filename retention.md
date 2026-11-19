@@ -42,8 +42,13 @@ touch label.
   bias, not noise: conservative by ~0.11 at tight cushions (q1 0.431
   observed vs 0.318 fitted, fitted outside the match-clustered 95%
   CI [0.39, 0.47]) and overshooting by ~0.085 at loose (q10 0.670
-  vs 0.755). Min cushion −1.028, so the −1.50 floor never binds —
-  the shift does all the work. Pinned in test_retention_fit.
+  vs 0.755; the observed q10<q9 dip is noise, the fitted overshoot
+  is bias). Touch-label strictness contributes: the +1 s / 1.5 m
+  rule fails 40% of completed passes overall (P(control | complete)
+  = 0.596), concentrated where first touches are hardest — q1 reads
+  0.603 complete vs 0.431 controlled. Min cushion −1.028, so the
+  −1.50 floor never binds — the shift does all the work. Pinned in
+  test_retention_fit.
 - Marking residual confirmed but unscored: within-cushion-band splits
   separate 0.36 vs 0.53 (tight) to 0.61 vs 0.75 (loose), and in q1
   tight marking (≤2.5 m) controls 0.345 vs 0.517 loose (n=58/58) —
@@ -52,7 +57,7 @@ touch label.
   bar. Alternatives checked on the same 1,160 rows fix the tails
   without clearing it: 3-param asymptote (A=0.80, λ=0.60, c0=−1.75)
   NLL 775.4 (dNLL 7.2, q1 prediction 0.412), 2-param logistic NLL
-  776.6 (dNLL 5.9). Revisit at n≥5,000 or pose-derived facing;
+  776.6 (dNLL 6.0). Revisit at n≥5,000 or pose-derived facing;
   needs dNLL ≥ 10 to earn its parameters. Until then the composition
   carries marking, never fits it.
 
