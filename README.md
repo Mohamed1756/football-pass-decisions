@@ -26,7 +26,7 @@ Hold duration given receipt, by reception zone. Median 2.16 s overall (2.40 s co
 
 ## Choice
 
-The choice-share curve over ranks, pooled. Rank 0 takes 0.41–0.44 on all five 360 leagues; the curve falls monotonically to a pooled tail. Top-2 ranks take ~0.68 of all passes. What passers pick, given the freeze.
+The choice-share curve over ranks, pooled. Rank 0 takes 0.41–0.44 on all five 360 leagues; the curve falls monotonically to a pooled tail. Top-2 ranks take ~0.68 of all passes (pooled; LaLiga 0.654), unconditioned on choice-set size. What passers pick, given the freeze.
 
 ![Choice shares by league](docs/figs/fig12_choice_shares.svg)
 

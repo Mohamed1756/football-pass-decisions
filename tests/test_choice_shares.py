@@ -1,6 +1,6 @@
 """Gate-2 choice shares: P(choose rank r), pooled, by league.
 
-No loader changes, no raw needed — counts the banked 173,440
+No loader changes, no raw needed — counts the banked 171,440
 one-row-per-pass dicts. The rank-0 headline becomes a pinned table.
 Zone/spread splits wait for a re-bank with pass grouping.
 """
@@ -35,3 +35,15 @@ def test_choice_shares_pinned():
         tot = len(five[league])
         for d in range(8):
             assert abs(by[d] / tot - shares[d]) < 5e-4, (league, d)
+def test_choice_top2_robust_to_tail():
+    # Rank 7+ is the only bin with n<300 per league (184-277 rows).
+    # Dropping it and renormalizing moves top-2 by +0.004 to +0.006,
+    # pooled and per league: the tail does not wag the headline.
+    five = pickle.load(open(CHOICE_POOLED_PATH, "rb"))
+    for league in CHOICE_SHARES:
+        rows = five[league]
+        full = sum(1 for r in rows if r["rank"] <= 1) / len(rows)
+        kept = [r for r in rows if r["rank"] <= 6]
+        assert len(rows) - len(kept) < 300
+        renorm = sum(1 for r in kept if r["rank"] <= 1) / len(kept)
+        assert 0.0 <= renorm - full < 0.01, (league, full, renorm)

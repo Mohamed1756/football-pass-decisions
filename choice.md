@@ -14,8 +14,9 @@ pool fits, not the person (passer-trait null stands at corr 0.01–0.02).
   spread splits wait for a re-bank with pass grouping.
 - Hierarchy needs passer IDs the pool doesn't carry, and 200+
   passers n≥5 (rule of thumb vs the ICC ≈ 0.03 floor) where IDSSE
-  has 51. The re-bank that adds IDs is the re-bank that unlocks
-  hierarchy — one blocked task, not two.
+  has 51. The re-bank that adds IDs also adds n_outlets per row,
+  unlocking set-size conditioning in the same pass — one blocked
+  task, not two.
 - Cross-source pooling dropped: a provider term where one source
   carries rate and the other carries dynamics absorbs the
   difference it should explain.
@@ -23,9 +24,18 @@ pool fits, not the person (passer-trait null stands at corr 0.01–0.02).
 ## Calibration (171,440 choices, by league)
 
 - Rank-0 choice 0.41–0.44 everywhere (WC2022 0.436, n=18,103);
-  curve falls to a pooled tail (rank 7+: 0.006–0.010, n<300 —
-  same pattern as gates 3–4). Top-2 ranks take ~0.68 of all
-  passes. Pinned in test_choice_shares.
+  curve falls to a pooled tail (rank 7+: 0.006–0.010, n<300 per
+  league — same pattern as gates 3–4). Top-2 ranks take ~0.68 pooled
+  (0.677; LaLiga lowest at 0.654). Dropping the rank-7+ tail and
+  renormalizing moves top-2 by +0.004 to +0.006 per league.
+  Pinned in test_choice_shares.
+- Unconditioned on choice-set size: rows carry (margin, rank,
+  complete) with no n_outlets, and 2-outlet sets take top-2
+  mechanically. Removing all rank-1 rows gives 0.571, but that is an
+  extreme scenario, not a bound — it assumes every rank-1 row is a
+  mechanical 2-outlet take and no rank-0 row is, against the
+  margin-preference direction. The 2-outlet mass is unidentified from
+  this pool, so the headline stays unconditioned until the re-bank.
 
 ## What the fit banked
 
