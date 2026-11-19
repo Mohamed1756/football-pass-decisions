@@ -62,9 +62,10 @@ def formation_window(
 
 
 def freeze_given_delta() -> None:
-    """Gate 5 → gate 0 composition: previous ΔS carries no information
-    about next openness (corr −0.04 on 1,152 linked pairs, pinned in
-    test_formation_transition).
+    """Gate 5 → gate 0 composition: previous press-delta carries no usable
+    information about next openness (unfiltered Pearson +0.10 on 1,152
+    linked pairs, Spearman +0.05; +0.02 on the 655 previous-controlled
+    pairs, pinned in test_formation_transition).
 
     Returns None by design, not by omission: the loop is architecture,
     not evidence. Callers wanting next-freeze description use

@@ -26,11 +26,15 @@ label_retention.py run, backwards. Pinned in test_formation_table (means) and te
 
 ## Loop test (nulled)
 
-Regress pre-pass press access on previous-pass ΔS, on
-1,152 linked pairs: corr = +0.10, loosening followed by 6.34 m vs
-5.73 m after tightening — the wrong direction for a loop, and
-indistinguishable from noise. The 0↔5 recurrence stays
-architecture, not evidence — gate 0 describes freezes
+Regress pre-pass press access on previous-pass press-delta. Unfiltered
+1,152 linked pairs: Pearson +0.10, Spearman +0.05 (R2~=1%). Detected at
+n=1,152, not noise, and not usable. The pairing is diluted (median gap
+8.6 s between linked rows, 39% within 5 s); gap<=5 s subset (n=452)
+gives r=+0.25. Under the stated conditioning (previous reception
+controlled, n=655) r=+0.02, null. Positive delta means loosened, so
+6.34 m after loosening vs 5.73 m after tightening runs with persistence;
+the loop hypothesis predicted tightening after loosening. The 0↔5
+recurrence stays architecture, not evidence — gate 0 describes freezes
 independently from here.
 
 ## Sources
