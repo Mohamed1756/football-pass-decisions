@@ -116,11 +116,13 @@ def _read_events_raw(
     path: str,
     stamps: Dict[int, float],
 ) -> List[Tuple[int, str]]:
-    """Every Play as (frame, kind): pass / loss / stoppage.
+    """Every Play as (frame, kind): pass / loss. Stoppage never emitted.
 
     Pass = any Height play with a Player (flat or high); loss = any
-    unsuccessful Evaluation; stoppage = whistle events (no Play).
-    Kinds outside pass/loss/stoppage are dropped — next_event filters.
+    unsuccessful Evaluation. Whistle events carry no Play element and
+    the loop below only visits Play elements, so the banked pool holds
+    zero stoppages (958 pass + 202 loss). Other kinds are dropped —
+    next_event filters.
     """
     from bisect import bisect_left
     from datetime import datetime

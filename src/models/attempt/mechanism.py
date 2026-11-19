@@ -1,13 +1,15 @@
-"""Possession intervals: receipt to next event, stratified by exit.
+"""Possession intervals: receipt to next annotated event, by exit.
 
 Gate 1 slice 1: pure functions on hand slices only. No loader changes,
 no fit, no banked intervals. The interval rule lives here so the bank
 slice applies it unchanged to the 1,160 measured receptions.
 
-An interval ends at the first of: pass attempt, loss of possession,
-stoppage whistle. Cut off — dropped, not censored — when tracking
-gaps, the half ends, or no next event is found: the pool is complete
-intervals only, same reception-conditioning as gates 4-5.
+An interval ends at the first annotated pass attempt or loss of
+possession after receipt. No tracking-gap, half-boundary, or team
+filter: a "pass" exit can be the opponent's pass after an unannotated
+turnover, and long tails are annotation gaps, not possessions. Cut off
+(dropped, not censored) only when no later annotated event is found.
+The banked pool holds zero stoppages (loader visits Play elements only).
 """
 
 from __future__ import annotations
@@ -31,12 +33,13 @@ def next_event(
     start_frame: int,
     frame_hz: float = 25.0,
 ) -> Optional[PossessionInterval]:
-    """First event strictly after start_frame closes the interval.
+    """First annotated event strictly after start_frame closes the interval.
 
     events: (frame, kind) sorted by frame, kind in {pass, loss,
-    stoppage}. Returns None when no later event exists (cut off —
-    caller drops the row, never imputes). Duration in seconds at the
-    given frame rate.
+    stoppage}. No gap, half, or team filter — the first later kind wins,
+    even across tracking gaps or turnovers. Returns None when no later
+    event exists (cut off — caller drops the row, never imputes).
+    Duration in seconds at the given frame rate.
     """
     for frame, kind in events:
         if frame <= start_frame:
