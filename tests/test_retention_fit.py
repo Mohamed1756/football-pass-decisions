@@ -157,6 +157,8 @@ def test_q1_bias_pinned():
         stats.append(sum(1 for r in sub if r["controlled"]) / len(sub))
     lo, hi = float(np.quantile(stats, 0.025)), float(np.quantile(stats, 0.975))
     assert fitted_mean < lo, (fitted_mean, lo, hi)
+
+
 # Bank processing order, not calendar order (raw not vendored, dates
 # unrecoverable): first 3 vs last 4 of the label script's match list.
 # Levels move across splits (control 0.592 vs 0.533, hold 2.36 vs
