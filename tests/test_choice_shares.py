@@ -35,6 +35,8 @@ def test_choice_shares_pinned():
         tot = len(five[league])
         for d in range(8):
             assert abs(by[d] / tot - shares[d]) < 5e-4, (league, d)
+
+
 def test_choice_top2_robust_to_tail():
     # Rank 7+ is the only bin with n<300 per league (184-277 rows).
     # Dropping it and renormalizing moves top-2 by +0.004 to +0.006,
