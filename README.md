@@ -48,7 +48,7 @@ Retention given arrival, fitted on 1,160 labeled receptions. Shifted exponential
 
 ## Resolution
 
-Structure change given control, by reception zone. Completed passes tighten structure everywhere (press −1.1 to −2.5, compactness −0.2 to −2.2); only failed receptions in mid loosen it (+0.44). Value lives in the right tail, not the mean.
+Structure 3 s after receipt, by reception zone. Completed passes read tighter on average (press −1.1 to −2.5), but a quarter to a third loosen press access (12–21% by >2 m) — value lives in the right tail, not the mean. Failed mid reads +0.44 mean against a −0.08 median.
 
 ![Resolution heatmap](docs/figs/fig9_resolution_heatmap.svg)
 
