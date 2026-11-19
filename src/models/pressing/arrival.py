@@ -31,6 +31,7 @@ class ArrivalResult:
     t_press_s: float
     best_presser_id: Optional[int]
     marking_dist_m: float
+    intercept_m: Optional[PitchPoint] = None
 
 
 def flight_time_s(
@@ -204,6 +205,7 @@ def arrival_margin(
             t_press_s=math.inf,
             best_presser_id=None,
             marking_dist_m=99.0,
+            intercept_m=None,
         )
 
     best_presser: Optional[int] = None
@@ -238,6 +240,7 @@ def arrival_margin(
             t_press_s=math.inf,
             best_presser_id=None,
             marking_dist_m=round(marking, 2) if math.isfinite(marking) else 99.0,
+            intercept_m=None,
         )
     return ArrivalResult(
         receiver_track_id=receiver.track_id,
@@ -246,4 +249,5 @@ def arrival_margin(
         t_press_s=round(t_press, 3),
         best_presser_id=best_presser,
         marking_dist_m=round(marking, 2),
+        intercept_m=PitchPoint(round(target.x, 2), round(target.y, 2)),
     )

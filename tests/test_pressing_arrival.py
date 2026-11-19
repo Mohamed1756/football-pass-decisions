@@ -116,6 +116,7 @@ def test_static_pressers_leave_positive_margin():
     pressers = [_actor(1, 80.0, 40.0), _actor(2, 95.0, 50.0)]
     res = arrival_margin(rec, pressers, passer)
     assert res.margin_s > 0.5
+    assert res.intercept_m == PitchPoint(x=86.0, y=25.0)
 
 
 def test_invalid_opponents_ignored():
@@ -126,6 +127,7 @@ def test_invalid_opponents_ignored():
     assert res.best_presser_id is None
     assert res.margin_s == -99.0  # unscorable, never the safest outlet
     assert res.t_press_s == math.inf
+    assert res.intercept_m is None
 
 
 def test_margin_falls_as_presser_accelerates():

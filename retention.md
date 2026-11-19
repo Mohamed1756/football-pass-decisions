@@ -110,6 +110,8 @@ Labels, window, and sample behind the calibration above:
 - 360 carries ordering only: no fitted retention levels apply (live
   marking uncomputable, double floor uncorrected there) — cushion
   rank still orders, same portability argument as gate 3.
+  `run_outlet` enforces this with its source flag (frozen inputs
+  raise instead of scoring).
 
 ## Deleted as unverifiable
 

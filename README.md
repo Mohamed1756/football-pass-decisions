@@ -69,8 +69,11 @@ from src.models.pressing.types import PressingActor
 
 receiver = PressingActor(track_id=9, team_id="own", pos_m=PitchPoint(86.0, 25.0))
 presser = PressingActor(track_id=1, team_id="opp", pos_m=PitchPoint(87.5, 26.5))
-out = run_outlet(receiver, [presser], PitchPoint(100.0, 29.0))
-print(out.margin_s, out.control_prob, out.loosen_prob, out.value)
+# tracking-scale inputs only: fitted control levels and decile edges
+# don't apply to frozen 360 snapshots (ordering only, retention.md).
+out = run_outlet(receiver, [presser], PitchPoint(100.0, 29.0), source="tracking")
+print(out.margin_s, out.control_prob, out.loosen_prob_given_control, out.value)
+print("joint loosening:", out.control_prob * out.loosen_prob_given_control)
 ```
 
 One call threads gates 3–5: arrival margin, fitted control, zone loosening, value. `scripts/reproduce.py` prints the banked tables (numpy + stdlib). `scripts/figures.py` rebuilds figs 8–12 from pinned tests.

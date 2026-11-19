@@ -30,7 +30,7 @@ class OutletValue:
     cushion_s: float
     risk: Optional[float]
     control_prob: float
-    loosen_prob: float
+    loosen_prob_given_control: float
     value: float
     best_presser_id: Optional[int]
     marking_dist_m: float
@@ -41,13 +41,31 @@ def run_outlet(
     opponents: List[PressingActor],
     passer_pos: PitchPoint,
     pace_k: float = 1.0,
+    source: str = "frozen",
 ) -> OutletValue:
     """One outlet, gates 3-4-5 end to end.
 
     Arrival margin -> readiness cushion -> fitted control ->
-    zone loosen -> value. Unscorable arrival (-99) propagates:
+    zone loosen -> value. value = control x progress x loosen is the
+    conditional factorization of sticking and loosening given arrival
+    (progress is a deterministic weight, not a random variable).
+    loosen_prob_given_control is conditional: the joint loosening is
+    control x loosen (at control 0.05 and loosen 0.35, joint 0.018).
+    Unscorable arrival (-99) propagates:
     risk None, control 0, loosen 0, value 0 — never a fitted number.
+
+    source gates portability: fitted control levels and frozen decile
+    edges apply to tracking-scale inputs only. "frozen" (360 snapshots,
+    ordering only) raises ValueError — rank outlets with rank_outlets
+    and bin with margin_decile instead of scoring levels here.
     """
+    if source not in ("tracking", "frozen"):
+        raise ValueError(f"source must be 'tracking' or 'frozen', got {source!r}")
+    if source == "frozen":
+        raise ValueError(
+            "run_outlet scores fitted levels (control curve, decile edges); "
+            "frozen 360 snapshots carry ordering only. See retention.md."
+        )
     res: ArrivalResult = arrival_margin(receiver, opponents, passer_pos)
     if not res.margin_s > -99.0:
         return OutletValue(
@@ -55,7 +73,7 @@ def run_outlet(
             cushion_s=res.margin_s,
             risk=None,
             control_prob=0.0,
-            loosen_prob=0.0,
+            loosen_prob_given_control=0.0,
             value=0.0,
             best_presser_id=None,
             marking_dist_m=99.0,
@@ -64,10 +82,15 @@ def run_outlet(
     comp: RetentionGivenArrival = retention_given_arrival(
         res, ready, res.marking_dist_m
     )
+    # Reception-keyed covariates: the fitted zone rates key on recept_x_m
+    # and progress on the intercept, not the freeze position. A receiver
+    # crossing 35/70 m between freeze and reception otherwise takes the
+    # wrong zone rate and progress.
+    assert res.intercept_m is not None  # scored path has an intercept
     zone = (
         "def"
-        if receiver.pos_m.x < 35.0
-        else ("mid" if receiver.pos_m.x < 70.0 else "att")
+        if res.intercept_m.x < 35.0
+        else ("mid" if res.intercept_m.x < 70.0 else "att")
     )
     loosen = loosen_given_control(zone, True)
     dec = margin_decile(res.margin_s)
@@ -76,9 +99,9 @@ def run_outlet(
         cushion_s=comp.cushion_s,
         risk=decile_risk(dec, pace_k),
         control_prob=comp.control_prob,
-        loosen_prob=loosen,
+        loosen_prob_given_control=loosen,
         value=outlet_value_fitted(
-            comp.control_prob, receiver.pos_m.x, loosen_prob=loosen
+            comp.control_prob, res.intercept_m.x, loosen_prob=loosen
         ),
         best_presser_id=res.best_presser_id,
         marking_dist_m=res.marking_dist_m,
