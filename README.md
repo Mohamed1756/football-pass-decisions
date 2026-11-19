@@ -6,7 +6,9 @@ sticks) → **choice** (which outlet gets picked) → **arrival** (does it
 get there) → **control** (does it stick) → **resolution** (did it break
 shape). Each gate has its research note, its banked pool, and its pinned
 tests; each conditions on the last. One call threads gates 3–5
-(`run_outlet`); the full chain runs from any tracked freeze.
+(`run_outlet`: arrival margin, fitted control, zone loosening, value);
+freeze/choice describe the inputs, attempt times the hold — composed
+through the shared banked pool, not yet through one entry call.
 
 ![Frozen vs live on one IDSSE pass (0.96 s measured flight, illustrative)](docs/figs/fig5_frozen_vs_live.svg)
 

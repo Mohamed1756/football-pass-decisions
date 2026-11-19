@@ -1,12 +1,12 @@
-# Methods: rank outlets, re-scale levels, measure seconds
+# Methods (gate 3: arrival): rank outlets, re-scale levels, measure seconds
 
-Three moves, each answering one question. Each move names the function
-to call and the evidence behind it.
-
-## 1. Rank every outlet on one freeze
-
+Gate-3 methods only — the arrival instrument. Each other gate documents
+its own method in its research note (`retention.md`, `resolution.md`,
+`freeze.md`, `attempt.md`, `choice.md`); composition lives in
+`src/models/pipeline.py::run_outlet`. Three moves, each answering one
+question. Each move names the function to call and the evidence behind it.
 ![Frozen vs live on one IDSSE pass (0.96 s measured flight, illustrative)](figs/fig5_frozen_vs_live.svg)
-![One frozen shape: the raw material behind fig1](figs/fig6_frozen_shape.svg)
+![One frozen shape: the raw material behind fig1 (illustrative single freeze)](figs/fig6_frozen_shape.svg)
 
 Score each outlet by its arrival cushion — `t_press - t_ball`, the time
 between the ball reaching the ball-to-runner intercept and the nearest
