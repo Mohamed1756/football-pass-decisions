@@ -124,6 +124,8 @@ def test_lolo_deciles_survive():
     for held in ("wc2022", "euro2020", "laliga", "euro2024"):
         assert 0.19 <= d1[held] <= 0.23, (held, d1[held])
     assert 0.26 <= d1["wwc2023"] <= 0.29, d1
+
+
 # Per-team ns from the match_teams.json join (reproduce.py logic).
 # fig3/table plot 13,122 labeled passes; the pool banks 14,822 live
 # rows, all with int outcomes — the 1,700-row plot filter is unbanked,
