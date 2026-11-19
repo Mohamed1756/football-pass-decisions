@@ -80,7 +80,8 @@ Labels, window, and sample behind the calibration above:
 - Marking at receipt, not at decision: `marking_dist_m` is the
   nearest other actor frozen at t=0 (teammates included; portability
   over precision, documented pro-receiver bias). Live marking stays
-  discount buys dNLL 1.2 on 1,160 rows — real but below the bar.
+  unscored: the bivariate discount buys dNLL 1.2 on 1,160 rows —
+  real but below the bar.
   Revisit trigger: n≥5,000 labeled touches or pose-derived facing,
   whichever first; the joint form needs dNLL ≥ 10 on the same pools
   to earn its parameters. Until then, frozen marking is carried for
