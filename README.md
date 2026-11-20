@@ -54,7 +54,7 @@ Structure 3 s after receipt, by reception zone. Completed passes read tighter on
 
 ## What the table doesn't care about
 
-Base incompletion spreads 2x across 13 A-League clubs, median attempted cushion spreads 2x — Melbourne City leads both. Rank predicts arrival, not points (points vs base incompletion −0.26; points vs median cushion −0.23).
+Base incompletion spreads 2x across 13 A-League clubs, median attempted cushion spreads 2x — Melbourne City leads both. Rank predicts arrival, not points (points correlations −0.26 / −0.23 are upstream lore: 12/13 league points null in-repo, see table-vs-fingerprints).
 
 ![Team decisions vs finishing, A-League (frozen figure; team pool banks 14,822 live rows, plotted 13,122 — recount before reusing)](docs/figs/fig3_team_fingerprints.svg)
 

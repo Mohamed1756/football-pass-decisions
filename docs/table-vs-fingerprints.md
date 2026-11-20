@@ -4,9 +4,11 @@ Rank predicts whether a pass arrives. It does not predict points.
 Across 13 A-League teams (SkillCorner, n=13,122 plotted passes per the
 frozen figure; team pool banks 14,822 live rows, 1,700-row gap
 unexplained in-repo): points vs base
-incompletion correlates −0.26; points vs median cushion −0.23.
-Neither is worth naming. Table facts (positions, 53 points,
-49/55/32 goals) are pinned in `data/pooled/league_table.json`.
+incompletion correlates −0.26; points vs median cushion −0.23 —
+upstream computations, not recomputable in-repo (12/13 league points
+null; see `data/pooled/league_table.json` note). Neither is worth
+naming. Table facts banked: Auckland 53 points, positions 1/2/3/11/12,
+goals 49/55/32; remaining points null.
 
 The table tells you why, team by team:
 
