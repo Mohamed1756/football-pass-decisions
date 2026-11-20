@@ -128,10 +128,11 @@ def test_lolo_deciles_survive():
 
 
 # Per-team ns from the match_teams.json join (reproduce.py logic).
-# fig3/table plot 13,122 labeled passes; the pool banks 14,822 live
-# rows, all with int outcomes — the 1,700-row plot filter is unbanked,
-# so the banked side is pinned here and the plot n must be recounted,
-# never assumed, downstream.
+# fig3/table plot 13,122 per the frozen figure; the pool banks 14,822
+# live rows, all with int outcomes — the 1,700-row gap is unexplained
+# in-repo (no team/match combo, malformation, or join miss accounts
+# for it), so the banked side is pinned here and the plot n must be
+# recounted, never assumed, downstream.
 TEAM_NS = {
     "Adelaide United": 1259,
     "Auckland FC": 2450,
