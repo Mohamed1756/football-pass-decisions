@@ -55,9 +55,9 @@ Both sides race to the ball-to-runner intercept.
   to ~0.23 at rank 6+, WC2022 rank 7 pooled 0.235 on n=260).
 - `src/models/pressing/calibration.py`: `rank_outlets`, `margin_decile`,
   `decile_risk`, `rank_risk`. Edges are sample-descriptive, not physics.
-- Unscorable by construction: 740 recipient-less passes (mostly failed),
-  per the upstream calibration analysis — no 360 loader in-repo, so
-  the drop is disclosed, not recomputable here.
+- Unscorable by construction: 740 recipient-less WC2022 passes (mostly
+  failed), per the upstream calibration analysis — no 360 loader
+  in-repo, so the drop is disclosed, not recomputable here.
   Selection bias toward structured balls; noted, not fixed.
 
 ## Replication (Euro2020 33,761 + LaLiga 28,694, frozen WC2022 bins)
