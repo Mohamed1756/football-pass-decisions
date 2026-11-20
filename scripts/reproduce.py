@@ -1,7 +1,8 @@
 """Reproduce headline tables from banked evidence (no tracking needed).
 
-Frozen-edge table: the same absolute margin everywhere (WC2022 edges),
-portable seconds. Headline gradients in arrival.md/fig1 use pooled
+Frozen-edge table: the same absolute margin everywhere (WC2022 edges,
+`DECILE_EDGES_S` — imported, single home in calibration.py), portable
+seconds. Headline gradients in arrival.md/fig1 use pooled
 deciles instead (each pool's own tenths, portable shape) — see
 data/pooled/README.md "Binning rule". Values here and headline d1
 0.244 (SkillCorner) / d1 0.40 (IDSSE) are the two binnings of the
@@ -19,21 +20,14 @@ import sys
 
 sys.path.insert(0, ".")
 
-EDGES = [1.01, 1.31, 1.52, 1.70, 1.85, 1.99, 2.13, 2.29, 2.50]
-
-
-def decile(m):
-    for i, e in enumerate(EDGES):
-        if m <= e:
-            return i + 1
-    return 10
+from src.models.pressing.calibration import margin_decile
 
 
 def table(rows, title):
     bins = collections.defaultdict(lambda: [0, 0])
     for m, inc in rows:
-        bins[decile(m)][0] += inc
-        bins[decile(m)][1] += 1
+        bins[margin_decile(m)][0] += inc
+        bins[margin_decile(m)][1] += 1
     print(title)
     for d in range(1, 11):
         f, n = bins[d]
@@ -72,13 +66,9 @@ def main():
         ("coulomb22", lambda d, v: flight_time_s(d, 22.0)),
         ("coulomb_meas", lambda d, v: flight_time_s(d, v)),
     ]:
-        err, inf = [], 0
-        for d, v, t in R:
-            p = fn(d, v)
-            if not math.isfinite(p):
-                inf += 1
-                continue
-            err.append(abs(p - t))
+        vals = [(fn(d, v), t) for d, v, t in R]
+        err = [abs(p - t) for p, t in vals if math.isfinite(p)]
+        inf = sum(1 for p, _ in vals if not math.isfinite(p))
         print(f"  {name}: medAE={np.median(err):.2f}s strand={inf / len(R):.3f}")
 
 
