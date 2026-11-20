@@ -53,7 +53,7 @@ def test_hand_computed_cell_pins_full_chain():
     cell = [c for c in cells if c.x_m == 7.5 and c.y_m == 8.5][0]
     assert cell.margin_s == res.margin_s
     assert cell.control_prob == comp.control_prob
-    assert cell.loosen_prob == 0.356  # def-zone fitted rate, not default
+    assert cell.loosen_prob_given_control == 0.356  # def-zone fitted rate, not default
     assert cell.value == outlet_value_fitted(
         comp.control_prob, cell.x_m, loosen_prob=0.356
     )

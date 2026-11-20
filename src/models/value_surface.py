@@ -37,7 +37,7 @@ class ValueCell:
     risk: Optional[float]
     control_prob: float
     marking_dist_m: float  # frozen at cell, not the fit covariate
-    loosen_prob: float  # P(pass loosens structure | control, zone); 0.5 = unmodeled
+    loosen_prob_given_control: float  # P(pass loosens | control, zone); 0.5 = unmodeled
     value: float
 
 
@@ -105,7 +105,7 @@ def value_surface(
                         risk=None,
                         control_prob=0.0,
                         marking_dist_m=99.0,
-                        loosen_prob=0.0,
+                        loosen_prob_given_control=0.0,
                         value=0.0,
                     )
                 )
@@ -123,7 +123,7 @@ def value_surface(
                     risk=decile_risk(dec, pace_k),
                     control_prob=comp.control_prob,
                     marking_dist_m=res.marking_dist_m,
-                    loosen_prob=loosen,
+                    loosen_prob_given_control=loosen,
                     value=outlet_value_fitted(comp.control_prob, x, loosen_prob=loosen),
                 )
             )
