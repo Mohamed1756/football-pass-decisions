@@ -8,10 +8,12 @@ pool-writing command exists in-repo (`scripts/label_retention.py`).
   `python3 scripts/label_retention.py` given the 7 raw matches at
   `/tmp/idsse_raw` (HuggingFace `pysport/idsse-data`, re-downloadable;
   ~2 min, 400 MB XML, not vendored). Run on demand, not in CI.
-- Loader-capable but unscripted: the six `idsse_*` measurement pools,
+- Loader-startable but unscripted: the six `idsse_*` measurement pools,
   the three `skillcorner_*` pools, and `value_choice_by_passer.pkl`.
   Loaders exist in `src/io/` (plus the repo test fixtures' hand
-  slices), but no banking script is banked for any of them.
+  slices), but each pool also needs unbanked logic on top (team join +
+  live-presser margins, full-pitch choice-set aggregation,
+  drag-rematch extraction): no banking script is banked for any of them.
 - Frozen reference inputs: `frozen_five_leagues.pkl` — no StatsBomb
   360 loader exists here. Kept auditable by the counts and edge
   values printed below; LOLO pins the artifact, not a regenerable
