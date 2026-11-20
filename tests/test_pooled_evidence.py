@@ -7,6 +7,7 @@ exact (failures, n), not rounded rates.
 
 import bisect
 import collections
+import hashlib
 import json
 import pickle
 
@@ -171,3 +172,32 @@ def test_team_join_recovers_banked_counts():
         for v in fp.values()
         for r in v
     )
+# sha256 of every banked pool with no generator. Content tests pin
+# counts and rates; these pins catch byte-level drift they cannot —
+# row reorderings, sub-bin edits, float churn. Any byte change to a
+# generator-less frozen input is unaccounted drift, so reorderings
+# fail here by design. idsse_retention_labeled.pkl is excluded: it
+# has a generator (label_retention.py) and deep content pins, and a
+# byte pin would false-fail a legitimate re-bank.
+POOL_SHA256 = {
+    "frozen_five_leagues.pkl": "314233b3ee420e8eede32e3f36e8265266ad0d4695d7efe685266436b882dc12",
+    "idsse_ball_flights.pkl": "b54c254ad06f29290d31ccc92e482ea2a93a456af131dddf4be94d09de6e8194",
+    "idsse_measured_all_1160.pkl": "16449cd8744d791c3592e3082e9615c7a1b1580bc0882e3705b0a72d1c13c23a",
+    "idsse_measured_live.pkl": "1a14700e183fa85926f2eab8d4daa5d540e4d7d59cdc74d58a805baa94836dd2",
+    "idsse_pooled7.pkl": "177464fb03b3de248d7c475ce6f4edca840cc0f889c96bd65848686b075aa642",
+    "idsse_reception_speeds.pkl": "add724dd927a592f441e0ae125d433b67cca8c88c46d45ee8bf0cca4699df903",
+    "idsse_rematch_656.pkl": "7631c5fc7223e74b5a443ae1c4cfbd9764ed6c0378a93835666f41e9f958656c",
+    "skillcorner_frozen_live.pkl": "357f2e18a09bc1d889b527f2c49e35c2e25a686ca3c346cadfb793a983aa6222",
+    "skillcorner_targeted_frozen_live.pkl": "81f0d76e97df5aa672aee2c4044689b5a293b15a036b55611b1a79b2f3b22b45",
+    "skillcorner_team_margins.pkl": "b01df8c2ee08fe0d5b5c0dcd3e91e45fd502fe59ea921e5b282f8b69b778ce23",
+    "value_choice_by_passer.pkl": "1c16059f00bdc161ac7e2f0a42e52ff94e6dbbb42c06bad77ab8233428b0db89",
+}
+
+
+def test_pool_bytes_pinned():
+    for name, want in POOL_SHA256.items():
+        h = hashlib.sha256()
+        with open(f"data/pooled/{name}", "rb") as f:
+            for chunk in iter(lambda: f.read(1 << 20), b""):
+                h.update(chunk)
+        assert h.hexdigest() == want, name
