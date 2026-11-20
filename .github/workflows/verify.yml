@@ -17,3 +17,8 @@ jobs:
       - run: ruff format --check src/ tests/ scripts/
       - run: mypy --strict src/
       - run: python3 scripts/reproduce.py
+      - name: tighten proof (completion block on generated-figure changes)
+        run: |
+          if git diff --name-only HEAD~1 HEAD 2>/dev/null | grep -qE '^(scripts/figures\.py|scripts/reproduce\.py)$'; then
+            git log -1 --pretty=%B | grep -q 'style-source:' || { echo "figures.py changed without skill completion block (missing style-source:). Run the tighten-code skill first."; exit 1; }
+          fi
