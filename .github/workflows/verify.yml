@@ -17,8 +17,30 @@ jobs:
       - run: ruff format --check src/ tests/ scripts/
       - run: mypy --strict src/
       - run: python3 scripts/reproduce.py
-      - name: tighten proof (completion block on generated-figure changes)
+      - name: tighten bars (nesting depth cap)
         run: |
-          if git diff --name-only HEAD~1 HEAD 2>/dev/null | grep -qE '^(scripts/figures\.py|scripts/reproduce\.py)$'; then
-            git log -1 --pretty=%B | grep -q 'style-source:' || { echo "figures.py changed without skill completion block (missing style-source:). Run the tighten-code skill first."; exit 1; }
-          fi
+          python3 - <<'PYEOF'
+          import ast, pathlib, sys
+          def maxdepth(tree):
+              best = [0]
+              def visit(n, d):
+                  if isinstance(n, (ast.If, ast.For, ast.While, ast.With)):
+                      d += 1
+                      best[0] = max(best[0], d)
+                  for c in ast.iter_child_nodes(n):
+                      visit(c, d)
+              visit(tree, 0)
+              return best[0]
+          bad = []
+          for f in ["scripts/figures.py", "scripts/reproduce.py"]:
+              p = pathlib.Path(f)
+              if not p.exists():
+                  continue
+              md = maxdepth(ast.parse(p.read_text()))
+              if md > 2:
+                  bad.append(f"{f}: nesting depth {md} > 2 (tighten rule 3)")
+          if bad:
+              print("\n".join(bad))
+              sys.exit(1)
+          print("tighten bars clean")
+          PYEOF

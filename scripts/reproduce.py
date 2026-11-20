@@ -75,10 +75,10 @@ def main():
         err, inf = [], 0
         for d, v, t in R:
             p = fn(d, v)
-            if math.isfinite(p):
-                err.append(abs(p - t))
-            else:
+            if not math.isfinite(p):
                 inf += 1
+                continue
+            err.append(abs(p - t))
         print(f"  {name}: medAE={np.median(err):.2f}s strand={inf / len(R):.3f}")
 
 
