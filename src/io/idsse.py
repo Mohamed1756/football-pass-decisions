@@ -27,6 +27,13 @@ from src.core.geometry import PitchPoint
 from src.models.pressing.types import PressingActor
 
 FRAME_HZ: float = 25.0
+
+# Window offsets derived from the frame rate, not magic numbers: the
+# touch label reads +1 s, the structure delta +3 s, the pre-freeze
+# window −5 s. If FRAME_HZ ever changes, the windows follow.
+TOUCH_WINDOW_FRAMES: int = int(1.0 * FRAME_HZ)
+STRUCT_WINDOW_FRAMES: int = int(3.0 * FRAME_HZ)
+FREEZE_WINDOW_FRAMES: int = int(5.0 * FRAME_HZ)
 BALL_SPEED_CAP_MS: float = 35.0
 
 
@@ -303,9 +310,9 @@ def _reception_point(
 class ReceptionWindow:
     """Ball and receiver 1 s after reception, plus marking at receipt.
 
-    Slice 2 of gate 4: the touch-label inputs. end_frame is the
     reception frame from `_reception_point`; plus1 reads frame
-    end_frame + 25 (IDSSE 25 Hz = 1 s). marking_dist_m is the nearest
+    end_frame + TOUCH_WINDOW_FRAMES (1 s at FRAME_HZ). marking_dist_m
+    is the nearest
     other actor's distance to the receiver at the reception instant
     (frozen at receipt, not advanced — the live advance needs t_ball
     per pass, which the fit caller supplies; this stays a lookup).
@@ -329,8 +336,8 @@ def reception_window(
     """1 s touch window for one reception. Pure lookup, no fitting."""
     b0 = ball.get(end_frame)
     r0 = frames.get(end_frame, {}).get(target_id)
-    b1 = ball.get(end_frame + 25)
-    r1 = frames.get(end_frame + 25, {}).get(target_id)
+    b1 = ball.get(end_frame + TOUCH_WINDOW_FRAMES)
+    r1 = frames.get(end_frame + TOUCH_WINDOW_FRAMES, {}).get(target_id)
     marking = math.inf
     if r0 is not None:
         for pid, pos in frames.get(end_frame, {}).items():

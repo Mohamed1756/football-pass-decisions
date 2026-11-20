@@ -78,11 +78,12 @@ def main() -> None:
                 measured=(end_pos, (end_frame - p.start_frame) / 25.0),
             )
             ready = receiver_readiness(rec, p.passer_pos_m)
+            from src.io.idsse import STRUCT_WINDOW_FRAMES, FREEZE_WINDOW_FRAMES
             from src.models.formation.mechanism import formation_window
             from src.models.retention.mechanism import label_touch
             from src.models.structure.mechanism import structure_delta
 
-            f3 = end_frame + 75  # receipt+3 s at 25 Hz
+            f3 = end_frame + STRUCT_WINDOW_FRAMES  # receipt+3 s
             b0 = ball.get(end_frame)
             b3 = ball.get(f3)
             r0 = frames.get(end_frame, {}).get(p.target_id)
@@ -118,7 +119,7 @@ def main() -> None:
                 )
             pre = None
             f0 = p.start_frame
-            f5 = f0 - 125  # pass -5 s at 25 Hz
+            f5 = f0 - FREEZE_WINDOW_FRAMES  # pass -5 s
             if f5 in frames and f0 in frames and ball.get(f0) is not None:
                 mates_f = {
                     pid: pos

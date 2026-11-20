@@ -3,6 +3,9 @@
 import pytest
 
 from src.io.idsse import (
+    FREEZE_WINDOW_FRAMES,
+    STRUCT_WINDOW_FRAMES,
+    TOUCH_WINDOW_FRAMES,
     _ball_speed,
     _load_roster,
     _read_passes,
@@ -10,6 +13,12 @@ from src.io.idsse import (
     _velocity,
     assign_sides,
 )
+
+
+def test_window_frames_derive_from_frame_hz():
+    assert TOUCH_WINDOW_FRAMES == 25  # +1 s touch label
+    assert STRUCT_WINDOW_FRAMES == 75  # +3 s structure delta
+    assert FREEZE_WINDOW_FRAMES == 125  # −5 s pre-freeze window
 
 MATCH_XML = """<?xml version="1.0" encoding="UTF-8" ?>
 <PutDataRequest>

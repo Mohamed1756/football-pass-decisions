@@ -8,6 +8,9 @@ pool-writing command exists in-repo (`scripts/label_retention.py`).
   `python3 scripts/label_retention.py` given the 7 raw matches at
   `/tmp/idsse_raw` (HuggingFace `pysport/idsse-data`, re-downloadable;
   ~2 min, 400 MB XML, not vendored). Run on demand, not in CI.
+  Re-ran 2026-11-20: 1,160/1,160 rows dict-identical, byte-identical
+  (CPython 3.13.1, pickle protocol 4). Byte-identity is
+  stack-conditional; content identity is the portable claim.
 - Loader-startable but unscripted: the six `idsse_*` measurement pools,
   the three `skillcorner_*` pools, and `value_choice_by_passer.pkl`.
   Loaders exist in `src/io/` (plus the repo test fixtures' hand
