@@ -20,6 +20,7 @@ def test_window_frames_derive_from_frame_hz():
     assert STRUCT_WINDOW_FRAMES == 75  # +3 s structure delta
     assert FREEZE_WINDOW_FRAMES == 125  # −5 s pre-freeze window
 
+
 MATCH_XML = """<?xml version="1.0" encoding="UTF-8" ?>
 <PutDataRequest>
 <MatchInformation>
