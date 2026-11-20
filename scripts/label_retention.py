@@ -1,9 +1,10 @@
 """Label retention touches + gate-0/1 windows on raw IDSSE tracking.
 
-Reads the 7 raw matches, applies the touch rule at receipt+1 s,
-banks (cushion, marking, controlled, deltas, pre-freeze, hold) rows.
-Slow (~2 min, 400 MB XML): run on demand, not in CI. CI pins the
-banked file instead.
+Raw prerequisite: the 7 matches at /tmp/idsse_raw (HuggingFace
+`pysport/idsse-data`, re-downloadable). Reads them, applies the touch
+rule at receipt+1 s, banks (cushion, marking, controlled, deltas,
+pre-freeze, hold) rows. Slow (~2 min, 400 MB XML): run on demand,
+not in CI. CI pins the banked file instead.
 """
 
 import pickle

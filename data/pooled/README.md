@@ -1,12 +1,23 @@
 # Pooled evidence: what the files are and what regenerates them
 
-Two tiers. Tracking-derived pools (SkillCorner, IDSSE) regenerate from
-the loaders in `src/io/` plus the repo test fixtures' hand slices —
-raw tracking (90 MB/match) is not vendored. **360-derived pools do
-not regenerate from this repo: no StatsBomb 360 loader exists here.**
-They are frozen reference inputs from the calibration analysis, kept
-auditable by the counts and edge values printed below. The scoring
-rule that bins everything (WC2022 edges) is the literal
+Three reproducibility classes — "regenerate from the loaders" below
+means you could write a script, not that one is banked. Exactly one
+pool-writing command exists in-repo (`scripts/label_retention.py`).
+
+- Reproducible by command: `idsse_retention_labeled.pkl` only, via
+  `python3 scripts/label_retention.py` given the 7 raw matches at
+  `/tmp/idsse_raw` (HuggingFace `pysport/idsse-data`, re-downloadable;
+  ~2 min, 400 MB XML, not vendored). Run on demand, not in CI.
+- Loader-capable but unscripted: the six `idsse_*` measurement pools,
+  the three `skillcorner_*` pools, and `value_choice_by_passer.pkl`.
+  Loaders exist in `src/io/` (plus the repo test fixtures' hand
+  slices), but no banking script is banked for any of them.
+- Frozen reference inputs: `frozen_five_leagues.pkl` — no StatsBomb
+  360 loader exists here. Kept auditable by the counts and edge
+  values printed below; LOLO pins the artifact, not a regenerable
+  pipeline, so a 360 re-cut is impossible in-repo.
+
+The scoring rule that bins everything (WC2022 edges) is the literal
 `DECILE_EDGES_S` in `src/models/pressing/calibration.py`.
 
 | File | n | Backs |
