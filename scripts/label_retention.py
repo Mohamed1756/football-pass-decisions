@@ -14,6 +14,9 @@ sys.path.insert(0, ".")
 
 from src.core.geometry import PitchPoint
 from src.io.idsse import (
+    FREEZE_WINDOW_FRAMES,
+    STRUCT_WINDOW_FRAMES,
+    FRAME_HZ,
     _load_roster,
     _read_passes,
     _read_tracking,
@@ -75,10 +78,9 @@ def main() -> None:
                 opps,
                 p.passer_pos_m,
                 live_pressers=True,
-                measured=(end_pos, (end_frame - p.start_frame) / 25.0),
+                measured=(end_pos, (end_frame - p.start_frame) / FRAME_HZ),
             )
             ready = receiver_readiness(rec, p.passer_pos_m)
-            from src.io.idsse import STRUCT_WINDOW_FRAMES, FREEZE_WINDOW_FRAMES
             from src.models.formation.mechanism import formation_window
             from src.models.retention.mechanism import label_touch
             from src.models.structure.mechanism import structure_delta
@@ -135,7 +137,7 @@ def main() -> None:
                 ok = True
                 for pid in mates_f:
                     track = []
-                    for f in range(f5, f0 + 1, 25):
+                    for f in range(f5, f0 + 1, int(FRAME_HZ)):
                         pos = frames.get(f, {}).get(pid)
                         if pos is None:
                             ok = False
