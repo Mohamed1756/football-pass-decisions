@@ -78,10 +78,11 @@ def resolution_heatmap() -> str:
 
     zones = ["def", "mid", "att"]
     rows = [(True, "controlled"), (False, "lost")]
+    mid_loosen = ZONE_MEANS[("mid", False)][1]
     parts = [
         '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 560" role="img">',
         "<title>Resolution: press-access change by zone and control</title>",
-        '<text x="500" y="32" text-anchor="middle" font-size="19" fill="#24292f">Completed passes tighten structure everywhere</text>',
+        '<text x="500" y="32" text-anchor="middle" font-size="19" fill="#24292f">Controlled receptions read tighter on average</text>',
         '<text x="500" y="54" text-anchor="middle" font-size="13" fill="#57606a">Mean press-access delta (m) by reception zone and first touch · 1,160 IDSSE receptions · red = converges, blue = loosens</text>',
     ]
     for ri, (ctl, lab) in enumerate(rows):
@@ -108,9 +109,9 @@ def resolution_heatmap() -> str:
     parts.append(
         '<g font-size="13" fill="#24292f">'
         '<text x="740" y="400" font-weight="bold">Takeaway</text>'
-        '<text x="740" y="422" font-size="13">Tightening everywhere on</text>'
-        '<text x="740" y="440" font-size="13">control; only mid loosens</text>'
-        '<text x="740" y="458" font-size="13">on failed receipt (+0.44).</text></g>'
+        '<text x="740" y="422" font-size="13">Tighter on average given</text>'
+        '<text x="740" y="440" font-size="13">control; only mid reads</text>'
+        f'<text x="740" y="458" font-size="13">looser on failed receipt ({mid_loosen:+.2f}).</text></g>'
     )
     parts.append("</svg>")
     return "\n".join(parts)
@@ -125,12 +126,12 @@ def freeze_schematic() -> str:
         '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 560" role="img">',
         "<title>Freeze: pre-pass shape by zone</title>",
         '<text x="500" y="32" text-anchor="middle" font-size="19" fill="#24292f">Freezes start pressed; men close down, not open up</text>',
-        '<text x="500" y="54" text-anchor="middle" font-size="13" fill="#57606a">Mean press access (m, blue) + separation velocity (m/fr, red) 5 s before the pass · 1,159 IDSSE receptions with full tracks</text>',
+        '<text x="500" y="54" text-anchor="middle" font-size="13" fill="#57606a">Mean press access (m, blue) + separation velocity (m/s, red) 5 s before the pass · 1,159 IDSSE receptions with full tracks</text>',
         '<rect x="90" y="76" width="620" height="400" fill="none" stroke="#d0d7de" stroke-width="1.5"/>',
     ]
 
     # Two panels like fig11: left bars = press access (m), right dots =
-    # sep. velocity (m/fr, labeled). Killed the position-as-value dots.
+    # sep. velocity (m/s, labeled). Killed the position-as-value dots.
     def bh(v: float) -> float:
         return (v - 4.0) / 4.0 * 300  # press 4..8 m -> height
 
@@ -173,7 +174,7 @@ def freeze_schematic() -> str:
         '<circle cx="751" cy="140" r="6" fill="#cf222e"/><text x="762" y="145">sep. velocity (dot, labeled)</text>'
         '<text x="740" y="180" font-weight="bold">Takeaway</text>'
         '<text x="740" y="202" font-size="13">Attacking freezes start</text>'
-        '<text x="740" y="220" font-size="13">most pressed (7.18 m);</text>'
+        f'<text x="740" y="220" font-size="13">most pressed ({FORMATION_BY_ZONE["att"][1]:.2f} m);</text>'
         '<text x="740" y="238" font-size="13">men close down everywhere</text>'
         "</g>"
     )
@@ -186,6 +187,7 @@ def hold_by_zone() -> str:
     from tests.test_hold_fit import HOLD_BY_ZONE
 
     zones = ["def", "mid", "att"]
+    mid_med, mid_p3 = HOLD_BY_ZONE["mid"][1], HOLD_BY_ZONE["mid"][2]
     parts = [
         '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 560" role="img">',
         "<title>Attempt: hold duration by zone</title>",
@@ -240,7 +242,7 @@ def hold_by_zone() -> str:
         '<circle cx="751" cy="140" r="6" fill="#cf222e"/><text x="762" y="145">pass-in-3s (dot, labeled)</text>'
         '<text x="740" y="180" font-weight="bold">Takeaway</text>'
         '<text x="740" y="202" font-size="13">Mid moves it quickest</text>'
-        '<text x="740" y="220" font-size="13">(1.96 s, 0.703); edges</text>'
+        f'<text x="740" y="220" font-size="13">({mid_med:.2f} s, {mid_p3:.3f}); edges</text>'
         '<text x="740" y="238" font-size="13">hold longer vs set</text>'
         '<text x="740" y="256" font-size="13">defenses.</text></g>'
     )
@@ -250,15 +252,15 @@ def hold_by_zone() -> str:
 
 def choice_shares() -> str:
     """Gate-2 choice shares per rank, five leagues overlaid."""
-    from tests.test_choice_shares import CHOICE_SHARES
+    from tests.test_choice_shares import CHOICE_SHARES, CHOICE_TOTAL
 
     leagues = ["wc2022", "euro2020", "laliga", "euro2024", "wwc2023"]
     colors = ["#0969da", "#1a7f37", "#8250df", "#cf7122", "#cf222e"]
     parts = [
         '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 560" role="img">',
         "<title>Choice: rank shares by league</title>",
-        '<text x="500" y="32" text-anchor="middle" font-size="19" fill="#24292f">Safest outlet takes ~0.43 everywhere</text>',
-        '<text x="500" y="54" text-anchor="middle" font-size="13" fill="#57606a">Share choosing each rank (0 = safest, 7+ pooled) · five 360 leagues, 171,440 passes</text>',
+        f'<text x="500" y="32" text-anchor="middle" font-size="19" fill="#24292f">Safest outlet takes ~{sum(v[0] for v in CHOICE_SHARES.values()) / len(CHOICE_SHARES):.2f} everywhere</text>',
+        f'<text x="500" y="54" text-anchor="middle" font-size="13" fill="#57606a">Share choosing each rank (0 = safest, 7+ pooled) · five 360 leagues, {CHOICE_TOTAL:,} passes</text>',
         '<rect x="90" y="76" width="620" height="400" fill="none" stroke="#d0d7de" stroke-width="1.5"/>',
     ]
 

@@ -10,6 +10,9 @@ import pickle
 
 CHOICE_POOLED_PATH = "data/pooled/frozen_five_leagues.pkl"
 
+# Total banked choice rows; figures.py derives fig12's subtitle from this.
+CHOICE_TOTAL: int = 171440
+
 # WC2022 rank-0 choice: 18,103 of 41,561.
 WC2022_N: int = 41561
 WC2022_RANK0_N: int = 18103
@@ -26,7 +29,7 @@ CHOICE_SHARES = {
 
 def test_choice_shares_pinned():
     five = pickle.load(open(CHOICE_POOLED_PATH, "rb"))
-    assert sum(len(v) for v in five.values()) == 171440
+    assert sum(len(v) for v in five.values()) == CHOICE_TOTAL
     wc = five["wc2022"]
     assert len(wc) == WC2022_N
     assert sum(1 for r in wc if r["rank"] == 0) == WC2022_RANK0_N
