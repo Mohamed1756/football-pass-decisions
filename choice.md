@@ -4,8 +4,10 @@
 given the freeze. First fit banked on 171,440 banked choice rows.)
 
 The choice is banked on every 360 pass: one row per pass (chosen
-outlet's rank, margin, outcome). Denominator disclosed: 740
-recipient-less passes dropped pre-pool, in-frame counts never banked.
+outlet's rank, margin, outcome). Denominator disclosed, not
+reproducible in-repo: per the calibration analysis, 740
+recipient-less passes were dropped pre-pool, in-frame counts never
+banked.
 P(choose rank r): the choice-share curve over ranks, pooled — the
 pool fits, not the person (passer-trait null stands at corr 0.01–0.02).
 ## Why pooled now, hierarchy later
