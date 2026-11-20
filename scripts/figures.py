@@ -13,7 +13,7 @@ sys.path.insert(0, ".")
 
 def retention_deciles() -> str:
     """Gate-4 control-by-cushion-decile: obs vs fitted exp curve."""
-    from tests.test_retention_fit import DECILE_FIT, DECILE_OBS
+    from tests.test_retention_fit import DECILE_FIT, DECILE_OBS, FIT_C0, FIT_LAM, POOL_N
 
     # log-ish y mapping over [0.25, 0.75]
     def y(v: float) -> float:
@@ -24,7 +24,7 @@ def retention_deciles() -> str:
         '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 560" role="img">',
         "<title>Retention: control by cushion decile</title>",
         '<text x="500" y="32" text-anchor="middle" font-size="19" fill="#24292f">Tighter cushions lose the ball — fitted exponential holds</text>',
-        '<text x="500" y="54" text-anchor="middle" font-size="13" fill="#57606a">Control rate by post-touch cushion decile (own tenths) · 1,160 IDSSE receptions · dots observed, line fitted (lam 0.40, c0 -1.50)</text>',
+        f'<text x="500" y="54" text-anchor="middle" font-size="13" fill="#57606a">Control rate by post-touch cushion decile (own tenths) · {POOL_N:,} IDSSE receptions · dots observed, line fitted (lam {FIT_LAM:.2f}, c0 {FIT_C0:.2f})</text>',
         '<rect x="90" y="76" width="620" height="400" fill="none" stroke="#d0d7de" stroke-width="1.5"/>',
     ]
     for i in range(1, 11):
@@ -65,6 +65,7 @@ def retention_deciles() -> str:
 
 def resolution_heatmap() -> str:
     """Gate-5 press-access delta by zone x control: 6 pinned cells."""
+    from tests.test_retention_fit import POOL_N
     from tests.test_structure_fit import ZONE_MEANS
 
     # diverging color: blue (loosens, +) to red (tightens, -), white at 0
@@ -83,7 +84,7 @@ def resolution_heatmap() -> str:
         '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 560" role="img">',
         "<title>Resolution: press-access change by zone and control</title>",
         '<text x="500" y="32" text-anchor="middle" font-size="19" fill="#24292f">Controlled receptions read tighter on average</text>',
-        '<text x="500" y="54" text-anchor="middle" font-size="13" fill="#57606a">Mean press-access delta (m) by reception zone and first touch · 1,160 IDSSE receptions · red = converges, blue = loosens</text>',
+        f'<text x="500" y="54" text-anchor="middle" font-size="13" fill="#57606a">Mean press-access delta (m) by reception zone and first touch · {POOL_N:,} IDSSE receptions · red = converges, blue = loosens</text>',
     ]
     for ri, (ctl, lab) in enumerate(rows):
         y = 120 + ri * 130
@@ -126,7 +127,7 @@ def freeze_schematic() -> str:
         '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 560" role="img">',
         "<title>Freeze: pre-pass shape by zone</title>",
         '<text x="500" y="32" text-anchor="middle" font-size="19" fill="#24292f">Freezes start pressed; men close down, not open up</text>',
-        '<text x="500" y="54" text-anchor="middle" font-size="13" fill="#57606a">Mean press access (m, blue) + separation velocity (m/s, red) 5 s before the pass · 1,159 IDSSE receptions with full tracks</text>',
+        f'<text x="500" y="54" text-anchor="middle" font-size="13" fill="#57606a">Mean press access (m, blue) + separation velocity (m/s, red) 5 s before the pass · {sum(v[0] for v in FORMATION_BY_ZONE.values()):,} IDSSE receptions with full tracks</text>',
         '<rect x="90" y="76" width="620" height="400" fill="none" stroke="#d0d7de" stroke-width="1.5"/>',
     ]
 
@@ -184,7 +185,7 @@ def freeze_schematic() -> str:
 
 def hold_by_zone() -> str:
     """Gate-1 hold medians + pass-within-3s by zone, exits stratified."""
-    from tests.test_hold_fit import HOLD_BY_ZONE
+    from tests.test_hold_fit import HOLD_BY_ZONE, POOL_N
 
     zones = ["def", "mid", "att"]
     mid_med, mid_p3 = HOLD_BY_ZONE["mid"][1], HOLD_BY_ZONE["mid"][2]
@@ -192,7 +193,7 @@ def hold_by_zone() -> str:
         '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 560" role="img">',
         "<title>Attempt: hold duration by zone</title>",
         '<text x="500" y="32" text-anchor="middle" font-size="19" fill="#24292f">Mid releases quickest; edges hold longer</text>',
-        '<text x="500" y="54" text-anchor="middle" font-size="13" fill="#57606a">Median hold (s, bars) + pass-within-3 s (dots) by reception zone · 1,160 IDSSE intervals</text>',
+        f'<text x="500" y="54" text-anchor="middle" font-size="13" fill="#57606a">Median hold (s, bars) + pass-within-3 s (dots) by reception zone · {POOL_N:,} IDSSE intervals</text>',
         '<rect x="90" y="76" width="620" height="400" fill="none" stroke="#d0d7de" stroke-width="1.5"/>',
     ]
 

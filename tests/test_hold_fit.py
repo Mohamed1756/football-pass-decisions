@@ -15,6 +15,9 @@ import numpy as np
 
 RETENTION_LABELED_PATH = "data/pooled/idsse_retention_labeled.pkl"
 
+# Banked pool size; figures.py derives fig11's subtitle from this.
+POOL_N: int = 1160
+
 # (zone, n, median hold, pass-within-3s rate, n_pass, n_loss).
 HOLD_BY_ZONE = {
     "def": (286, 2.52, 0.629, 229, 57),
@@ -36,7 +39,7 @@ def _zone(x_m: float) -> str:
 
 def test_hold_fit_pinned():
     rows = pickle.load(open(RETENTION_LABELED_PATH, "rb"))
-    assert len(rows) == 1160
+    assert len(rows) == POOL_N
     assert all(r.get("hold_s") is not None for r in rows)
     for zone, (n, med, p3, npass, nloss) in HOLD_BY_ZONE.items():
         sub = [r for r in rows if _zone(r["recept_x_m"]) == zone]
