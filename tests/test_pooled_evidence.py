@@ -203,3 +203,24 @@ def test_pool_bytes_pinned():
             for chunk in iter(lambda: f.read(1 << 20), b""):
                 h.update(chunk)
         assert h.hexdigest() == want, name
+# Exactly one incomplete row (J03WN1/100082, missing -5 s tracks):
+# pre_press_m and pre_sep_vel are each None once, on that row; every
+# other field is present on all 1,160 rows. Column growth that drops
+# coverage anywhere fails here with the field named.
+NONE_COUNTS = {"pre_press_m": 1, "pre_sep_vel": 1}
+
+
+def test_pool_none_profile_pinned():
+    rows = pickle.load(open("data/pooled/idsse_retention_labeled.pkl", "rb"))
+    assert len(rows) == 1160
+    keys = set()
+    for r in rows:
+        keys.update(r.keys())
+    for k in sorted(keys):
+        n = sum(1 for r in rows if r.get(k) is None)
+        assert n == NONE_COUNTS.get(k, 0), (k, n)
+    bad = [r for r in rows if r.get("pre_press_m") is None]
+    assert [(r["match"], r["pass_idx"]) for r in bad] == [("J03WN1", 100082)]
+    assert all(r.get("pre_sep_vel") is None for r in bad)
+    have = [r for r in rows if r.get("pre_press_m") is not None]
+    assert len(have) == 1159

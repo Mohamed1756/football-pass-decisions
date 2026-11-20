@@ -12,7 +12,9 @@ def test_hold_freeze_null():
     have = [
         r
         for r in rows
-        if r.get("pre_press_m") is not None and r.get("hold_s") is not None
+        if r.get("pre_press_m") is not None
+        and r.get("pre_sep_vel") is not None
+        and r.get("hold_s") is not None
     ]
     assert len(have) == 1159
     for var in ("pre_press_m", "pre_sep_vel"):
