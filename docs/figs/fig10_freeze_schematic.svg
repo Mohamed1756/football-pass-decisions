@@ -1,7 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 560" role="img">
 <title>Freeze: pre-pass shape by zone</title>
 <text x="500" y="32" text-anchor="middle" font-size="19" fill="#24292f">Freezes start pressed; men close down, not open up</text>
-<text x="500" y="54" text-anchor="middle" font-size="13" fill="#57606a">Mean press access (m, blue) + separation velocity (m/fr, red) 5 s before the pass · 1,159 IDSSE receptions with full tracks</text>
+<text x="500" y="54" text-anchor="middle" font-size="13" fill="#57606a">Mean press access (m, blue) + separation velocity (m/s, red) 5 s before the pass · 1,159 IDSSE receptions with full tracks</text>
 <rect x="90" y="76" width="620" height="400" fill="none" stroke="#d0d7de" stroke-width="1.5"/>
 <rect x="121" y="306" width="80" height="114" fill="#0969da"/>
 <text x="161" y="500" text-anchor="middle" font-size="12" fill="#24292f">def</text>
