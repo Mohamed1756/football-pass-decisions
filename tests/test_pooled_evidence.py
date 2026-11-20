@@ -226,3 +226,30 @@ def test_pool_none_profile_pinned():
     assert all(r.get("pre_sep_vel") is None for r in bad)
     have = [r for r in rows if r.get("pre_press_m") is not None]
     assert len(have) == 1159
+# IDSSE measured pool on frozen WC2022 edges (the table reproduce.py
+# prints; no other test pins it). Noisy tail past d4 — counts are the
+# contract, not shape.
+IDSSE_FROZEN_EDGE_COUNTS = (
+    (92, 532),
+    (26, 222),
+    (9, 93),
+    (3, 74),
+    (3, 55),
+    (1, 32),
+    (1, 21),
+    (0, 33),
+    (0, 26),
+    (1, 72),
+)
+
+
+def test_idsse_frozen_edge_table_pinned():
+    both = pickle.load(open("data/pooled/idsse_measured_all_1160.pkl", "rb"))
+    assert len(both) == 1160
+    bins = collections.defaultdict(lambda: [0, 0])
+    for m, inc in both:
+        d = margin_decile(m)
+        bins[d][0] += inc
+        bins[d][1] += 1
+    for d in range(1, 11):
+        assert (bins[d][0], bins[d][1]) == IDSSE_FROZEN_EDGE_COUNTS[d - 1], d
