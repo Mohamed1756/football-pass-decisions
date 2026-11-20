@@ -203,6 +203,8 @@ def test_pool_bytes_pinned():
             for chunk in iter(lambda: f.read(1 << 20), b""):
                 h.update(chunk)
         assert h.hexdigest() == want, name
+
+
 # Exactly one incomplete row (J03WN1/100082, missing -5 s tracks):
 # pre_press_m and pre_sep_vel are each None once, on that row; every
 # other field is present on all 1,160 rows. Column growth that drops
