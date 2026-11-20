@@ -172,6 +172,8 @@ def test_team_join_recovers_banked_counts():
         for v in fp.values()
         for r in v
     )
+
+
 # sha256 of every banked pool with no generator. Content tests pin
 # counts and rates; these pins catch byte-level drift they cannot —
 # row reorderings, sub-bin edits, float churn. Any byte change to a
