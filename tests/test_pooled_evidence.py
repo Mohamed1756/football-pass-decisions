@@ -226,6 +226,8 @@ def test_pool_none_profile_pinned():
     assert all(r.get("pre_sep_vel") is None for r in bad)
     have = [r for r in rows if r.get("pre_press_m") is not None]
     assert len(have) == 1159
+
+
 # IDSSE measured pool on frozen WC2022 edges (the table reproduce.py
 # prints; no other test pins it). Noisy tail past d4 — counts are the
 # contract, not shape.
