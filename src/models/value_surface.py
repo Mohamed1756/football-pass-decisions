@@ -9,7 +9,10 @@ small, and wiring it now would pretend a fitted joint form exists.
 Revisit when the marking term earns its parameters.
 
 Unscorable cells (no valid presser) carry risk=None, control 0.0,
-value 0.0: never displayed as safe or valuable.
+value 0.0: never displayed as safe or valuable. value == 0.0 alone
+is not diagnostic — unscorable, no-control, no-progress, and
+worthless all read 0.0. risk is None is the unscorable marker;
+consumers distinguish via risk, never via value alone.
 """
 
 from __future__ import annotations
@@ -52,9 +55,12 @@ def outlet_value_fitted(
     value = control x progress x loosen: the joint of arriving, sticking,
     and breaking shape, assuming independence until gate 5 fits the joint
     form (same null-to-beat pattern as retention's multiplicative start).
-    loosen_prob defaults to 0.5 (unmodeled); the value surface passes the
-    fitted zone rate via loosen_given_control. attack_sign and the
-    stderr clip warning follow the old (cut) outlet_value contract.
+    loosen_prob defaults to 0.5 (unmodeled) and is float-only: None
+    raises TypeError (mypy rejects it statically; the runtime crash is
+    acceptable fail-loud for a programming error). Use 0.0 for
+    worthless, risk=None upstream for unscorable — see module docstring.
+    attack_sign and the stderr clip warning follow the old (cut)
+    outlet_value contract.
     """
     if attack_sign not in (1.0, -1.0):
         raise ValueError(f"attack_sign must be +1 or -1, got {attack_sign}")
