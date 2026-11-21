@@ -307,9 +307,9 @@ def choice_shares() -> str:
 
 
 if __name__ == "__main__":
+    import pathlib
     import sys
 
-    name = sys.argv[1] if len(sys.argv) > 1 else "retention"
     builders = {
         "retention": retention_deciles,
         "resolution": resolution_heatmap,
@@ -324,6 +324,20 @@ if __name__ == "__main__":
         "hold": "docs/figs/fig11_hold_by_zone.svg",
         "choice": "docs/figs/fig12_choice_shares.svg",
     }
-    svg = builders[name]()
-    open(paths[name], "w").write(svg)
-    print(f"wrote {paths[name]}")
+    name = sys.argv[1] if len(sys.argv) > 1 else "retention"
+    if name == "check":
+        # Regen-diff gate: rebuild all five in memory, fail on drift.
+        # Change a pin -> rerun builders -> commit SVGs, same task.
+        drifted = []
+        for key, build in builders.items():
+            if pathlib.Path(paths[key]).read_text() != build():
+                drifted.append(paths[key])
+        if drifted:
+            print("drifted figures (rerun builders and commit):")
+            print("\n".join(drifted))
+            sys.exit(1)
+        print("figures match banked")
+    else:
+        svg = builders[name]()
+        open(paths[name], "w").write(svg)
+        print(f"wrote {paths[name]}")
