@@ -138,3 +138,22 @@ def test_assign_sides_rejects_unknown_sides():
         assign_sides(actors, PitchPoint(85, 34))
     with pytest.raises(ValueError):
         assign_sides([], PitchPoint(85, 34))
+
+
+def test_assign_sides_misassigns_interception_frame():
+    from src.core.geometry import PitchPoint
+    from src.models.pressing.types import PressingActor
+
+    actors = [
+        PressingActor(track_id=0, team_id="home", pos_m=PitchPoint(80, 34)),
+        PressingActor(track_id=1, team_id="home", pos_m=PitchPoint(60, 34)),
+        PressingActor(track_id=2, team_id="away", pos_m=PitchPoint(84, 34)),
+        PressingActor(track_id=3, team_id="away", pos_m=PitchPoint(50, 34)),
+    ]
+    rec, opp = assign_sides(actors, PitchPoint(85, 34))
+    # Nearest man (away, 1 m) beats the true receiver (home, 5 m):
+    # nearest-man rule misassigns by construction. Turnover-scoring
+    # callers pass sides explicitly; if this ever returns home, the
+    # heuristic changed and the docstring contract goes with it.
+    assert [a.team_id for a in rec] == ["away", "away"]
+    assert [a.team_id for a in opp] == ["home", "home"]
