@@ -355,3 +355,7 @@ def test_gated_velocity_treated_as_stationary():
     assert gate_tracking_velocity((10.42, 0.25), False) == ((0.0, 0.0), True)
     assert gate_tracking_velocity((2.0, 0.0), True) == ((0.0, 0.0), True)
     assert gate_tracking_velocity((2.0, 0.0), False) == ((2.0, 0.0), False)
+    # Boundary is strict >: exactly 8.5 m/s passes through untouched,
+    # 8.51 gates. 8.5 is exactly representable — no FP edge.
+    assert gate_tracking_velocity((8.5, 0.0), False) == ((8.5, 0.0), False)
+    assert gate_tracking_velocity((8.51, 0.0), False) == ((0.0, 0.0), True)
