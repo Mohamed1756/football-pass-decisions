@@ -1,5 +1,7 @@
 """Value surface tests: hand-computed cell, unscorable, ordering."""
 
+import pytest
+
 from src.core.geometry import PitchPoint
 from src.models.pressing.types import PressingActor
 from src.models.value_surface import outlet_value_fitted, value_surface
@@ -57,3 +59,23 @@ def test_hand_computed_cell_pins_full_chain():
     assert cell.value == outlet_value_fitted(
         comp.control_prob, cell.x_m, loosen_prob=0.356
     )
+
+
+def test_attack_sign_rejects_other_values():
+    with pytest.raises(ValueError):
+        outlet_value_fitted(0.9, 80.0, attack_sign=2.0)
+    with pytest.raises(ValueError):
+        outlet_value_fitted(0.9, 80.0, attack_sign=0)
+
+
+def test_attack_sign_minus_one_flips_progress():
+    assert outlet_value_fitted(0.9, 80.0, attack_sign=-1.0) == round(
+        0.9 * (105.0 - 80.0) / 105.0 * 0.5, 4
+    )
+
+
+def test_out_of_range_clips_with_warning(capsys):
+    assert outlet_value_fitted(0.9, 200.0) == round(0.9 * 1.0 * 0.5, 4)
+    assert "clipped to boundary" in capsys.readouterr().err
+    assert outlet_value_fitted(0.9, -5.0) == 0.0
+    assert "clipped to boundary" in capsys.readouterr().err
