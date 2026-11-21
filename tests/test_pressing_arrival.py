@@ -69,6 +69,15 @@ def test_intercept_unreachable_is_no_ball():
     assert t == math.inf
 
 
+def test_intercept_receiver_at_ball_returns_zero():
+    # gap(0) <= 0: receiver already at the ball — no flight, no search.
+    tgt, t = intercept_target(
+        PitchPoint(x=50.0, y=30.0), (0.0, 0.0), PitchPoint(x=50.0, y=30.0)
+    )
+    assert (tgt.x, tgt.y) == (50.0, 30.0)
+    assert t == 0.0
+
+
 def test_intercept_horizon_derived_from_strike_not_hardcoded():
     # Weak strike the runner outruns: dead ball, live runner past the
     # monotone horizon. Unreachable, not a slow ball.
