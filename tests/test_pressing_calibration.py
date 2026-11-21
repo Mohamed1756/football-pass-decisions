@@ -55,6 +55,8 @@ def test_decile_risk_monotone_fitted_gradient():
     assert decile_risk(10) == DECILE_INCOMPLETION_RATE[-1]
     with pytest.raises(ValueError):
         decile_risk(0)
+    with pytest.raises(ValueError):
+        decile_risk(11)
 
 
 def test_decile_risk_pace_scales_level_not_order():
@@ -64,6 +66,14 @@ def test_decile_risk_pace_scales_level_not_order():
     assert decile_risk(1) == pytest.approx(0.204, abs=1e-3)
     assert decile_risk(1, 1.5) == pytest.approx(0.306, abs=1e-3)
     assert decile_risk(1, 99.0) == 1.0
+    # Nonsense multipliers fail loud: negative risk and silent
+    # min(1.0, nan) artifacts are worse than crash-shaped.
+    with pytest.raises(ValueError):
+        decile_risk(1, pace_k=-1.0)
+    with pytest.raises(ValueError):
+        decile_risk(1, pace_k=float("nan"))
+    with pytest.raises(ValueError):
+        decile_risk(1, pace_k=float("inf"))
 
 
 def test_rank_risk_monotone_to_pool():

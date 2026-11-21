@@ -93,6 +93,11 @@ def margin_decile(margin_s: float) -> int:
     unscorable as decile 1 ("tightest, risk 0.204") is the silent-safe
     failure this instrument exists to prevent. Callers score unscorable
     via the margin_s == -99.0 check (see risk_surface), never via decile.
+
+    Negative finite margins (non-viable outlets, press already wins)
+    bin as decile 1 — bottom-decile risk, not higher. Mild
+    extrapolation, acceptable for an ordering instrument, stated here
+    so it is not silent.
     """
 
     if not math.isfinite(margin_s) or margin_s <= -99.0:
@@ -115,6 +120,8 @@ def decile_risk(decile: int, pace_k: float = 1.0) -> float:
     """
     if not 1 <= decile <= 10:
         raise ValueError(f"decile must be 1-10, got {decile}")
+    if not math.isfinite(pace_k) or pace_k < 0:
+        raise ValueError(f"pace_k must be finite and >= 0, got {pace_k}")
     return min(1.0, DECILE_INCOMPLETION_RATE[decile - 1] * pace_k)
 
 
