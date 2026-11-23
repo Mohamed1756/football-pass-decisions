@@ -4,19 +4,65 @@ Gate 0 descriptors that move: nearest-opponent distance to ball (state)
 and its rate of change over [-5 s, 0] (derivative). Open-man counts cut:
 repositioning without separation (+0.01 to +0.21 everywhere) — noise
 with a name. See gate5.md for the same cut on the resolution side.
+Affordance volume sits beside the window: viable-set size plus margin
+entropy over the frozen choice-set margins, same gate-0 status —
+describes the freeze, rates nothing.
 """
 
 from __future__ import annotations
 
 import math
 from dataclasses import dataclass
-from typing import Dict, List, Tuple
+from typing import Dict, List, Sequence, Tuple
 
 
 @dataclass(frozen=True)
 class FormationWindow:
     press_access_at_freeze_m: float
     separation_velocity_ms: float
+
+
+@dataclass(frozen=True)
+class AffordanceVolume:
+    n_viable: int
+    entropy_bits: float
+    effective_options: float
+
+
+def affordance_volume(
+    margins_s: Sequence[float], viability_thr_s: float = 0.0
+) -> AffordanceVolume:
+    """Choice load at the freeze from frozen choice-set margins.
+
+    Viable = finite margin above viability_thr_s (default 0.0, the
+    physical viability line in arrival.md: margin > 0). The -99.0
+    unscorable sentinel never counts as viable. Probabilities are
+    linear in margin over the viable subset only: p_j = m_j / sum(m).
+    Linear needs all m_j > 0, which viability_thr_s >= 0 guarantees;
+    a negative threshold would admit negative probabilities, so it
+    raises. Entropy is base-2 (bits); effective options = 2**H.
+    Empty or single-viable sets read (0, 0.0, 0.0) / (1, 0.0, 1.0):
+    no choice, no load.
+    """
+    if not math.isfinite(viability_thr_s) or viability_thr_s < 0.0:
+        raise ValueError(
+            f"viability_thr_s must be finite and >= 0, got {viability_thr_s}"
+        )
+    viable = [
+        m for m in margins_s if math.isfinite(m) and m > viability_thr_s and m > -99.0
+    ]
+    n = len(viable)
+    if n <= 1:
+        return AffordanceVolume(
+            n_viable=n, entropy_bits=0.0, effective_options=float(n)
+        )
+    total = sum(viable)
+    entropy = -sum((m / total) * math.log2(m / total) for m in viable)
+    return AffordanceVolume(
+        n_viable=n,
+        entropy_bits=round(entropy, 3),
+        effective_options=round(2.0**entropy, 3),
+    )
 
 
 def _nearest_opp_dist(
