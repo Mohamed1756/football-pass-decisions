@@ -53,8 +53,15 @@ def _bin_of(nv):
 
 
 def main() -> None:
+    import argparse
+
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--verified-only", action="store_true")
+    args = ap.parse_args()
     rows = pickle.load(open(POOL_PATH, "rb"))
-    print(f"sets={len(rows)}")
+    if args.verified_only:
+        rows = [r for r in rows if r["verify_ok"]]
+        print(f"verified subset: n={len(rows)}")
     ok = [r for r in rows if r["verify_ok"]]
     print(f"verified={len(ok)} ({len(ok) / len(rows):.2f})")
     print("n_outlets mean=%.2f" % (sum(r["n_outlets"] for r in rows) / len(rows)))

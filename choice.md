@@ -104,11 +104,14 @@ Replicated on LaLiga 360 (`scripts/evaluate_360_choice.py`, same bars,
 vs obs 0.40/0.28/0.27/0.09 — first three bins inside ±0.06, the ≥10 bin
 fails on n=124. Identity reverses here: value-rank-0 0.356 vs
 margin-rank-0 0.429 (IDSSE read 0.193 vs 0.104). LOO again goes to
-linear (−25,183 vs −26,435). The value-identity signal does not
-transfer to frozen in-frame sets — misattributed chosen outlets
-(nearest-to-end, verify p50 3.8 m), frozen-only margins, and a noisier
-attack map (51 ambiguous cells dropped) are all on the suspect list,
-in that order. No banking; the form stays rejected on both pools.
+linear (−25,183 vs −26,435). Verified-subset retest (`--verified-only`,
+n=10,538, chosen within 5 m of the end point): identity value 0.358
+vs margin 0.441 — cleaning attribution widens margin's lead instead
+of restoring value's. The misattribution hypothesis is rejected; the
+identity edge was IDSSE-specific (live tracking or full-pitch sets),
+not general. No banking; the form stays rejected on both pools.
+Gate-2 modeling closes: descriptive gradient stands on both pools,
+identity unidentified, loop stepper unbuilt for cause.
 
 ## Branch credit readout (descriptive, no fit)
 
