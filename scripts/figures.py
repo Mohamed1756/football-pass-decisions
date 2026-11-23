@@ -1,9 +1,9 @@
 """Banked-figure builder: SVG from pinned test constants, no raw needed.
 
-Each generated figure (8-12) reads its numbers from the test file that
-pins them, so a generated figure can never drift from the evidence.
-Frozen figures (1, 3, 5, 6, 7) have no builder; see data/pooled/README
-Figure provenance. Run on demand, not in CI.
+Each generated figure (8-12 plus L1 13a-d) reads its numbers from the
+test or pool that pins them, so a generated figure can never drift
+from the evidence. Frozen figures (1, 3, 5, 6, 7) have no builder;
+see data/pooled/README Figure provenance. Run on demand, not in CI.
 """
 
 import sys
@@ -310,12 +310,23 @@ if __name__ == "__main__":
     import pathlib
     import sys
 
+    from freeze_schematic import (
+        build_median as build_l1_median,
+        build_smallest as build_l1_smallest,
+        build_tail as build_l1_tail,
+        build_unscorable as build_l1_unscorable,
+    )
+
     builders = {
         "retention": retention_deciles,
         "resolution": resolution_heatmap,
         "freeze": freeze_schematic,
         "hold": hold_by_zone,
         "choice": choice_shares,
+        "l1_median": build_l1_median,
+        "l1_tail": build_l1_tail,
+        "l1_smallest": build_l1_smallest,
+        "l1_unscorable": build_l1_unscorable,
     }
     paths = {
         "retention": "docs/figs/fig8_retention_deciles.svg",
@@ -323,10 +334,14 @@ if __name__ == "__main__":
         "freeze": "docs/figs/fig10_freeze_schematic.svg",
         "hold": "docs/figs/fig11_hold_by_zone.svg",
         "choice": "docs/figs/fig12_choice_shares.svg",
+        "l1_median": "docs/figs/fig13_freeze_median.svg",
+        "l1_tail": "docs/figs/fig13_freeze_tail.svg",
+        "l1_smallest": "docs/figs/fig13_freeze_smallest.svg",
+        "l1_unscorable": "docs/figs/fig13_freeze_unscorable.svg",
     }
     name = sys.argv[1] if len(sys.argv) > 1 else "retention"
     if name == "check":
-        # Regen-diff gate: rebuild all five in memory, fail on drift.
+        # Regen-diff gate: rebuild all nine in memory, fail on drift.
         # Change a pin -> rerun builders -> commit SVGs, same task.
         drifted = []
         for key, build in builders.items():

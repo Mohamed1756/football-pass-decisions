@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 560" role="img">
+<title>Freeze schematic</title>
+<pattern id="hatch" width="8" height="8" patternUnits="userSpaceOnUse"><path d="M0,8 L8,0" stroke="#8c959f" stroke-width="1.5"/></pattern>
+<text x="150" y="30" font-size="16" fill="#24292f">Freeze: safest-first outlet stack</text>
+<text x="150" y="52" font-size="12" fill="#57606a">J03WR9 33038 DFL-OBJ-0026MI · zone att · ctrl True · hold 1.64/pass · hash 9af1a677e3e4</text>
+<text x="150" y="72" font-size="12" fill="#57606a">n=10 viable=8 entropy=2.38 bits · pre_press=9.2 pre_sep=-0.125 · Δpress=18.38</text>
+<line x1="185" y1="90" x2="185" y2="540" stroke="#cf222e" stroke-width="1.5" stroke-dasharray="5 4"/>
+<text x="189" y="84" font-size="11" fill="#cf222e">τ=0.0 viable →</text>
+<rect x="150" y="108" width="450" height="26" fill="#0969da"/>
+<text x="130" y="126" text-anchor="end" font-size="12" fill="#24292f">r0</text>
+<text x="610" y="126" font-size="11" fill="#57606a">4.20</text>
+<circle cx="618" cy="121" r="7" fill="none" stroke="#9a6700" stroke-width="2"/>
+<text x="626" y="126" font-size="11" fill="#9a6700">best unchosen</text>
+<rect x="150" y="152" width="256" height="26" fill="#0969da"/>
+<text x="130" y="170" text-anchor="end" font-size="12" fill="#24292f">r1</text>
+<text x="415" y="170" font-size="11" fill="#57606a">2.23</text>
+<rect x="150" y="196" width="230" height="26" fill="#0969da"/>
+<text x="130" y="214" text-anchor="end" font-size="12" fill="#24292f">r2</text>
+<text x="390" y="214" font-size="11" fill="#57606a">1.98</text>
+<rect x="144" y="190" width="242" height="38" fill="none" stroke="#1a7f37" stroke-width="3"/>
+<text x="398" y="214" font-size="11" fill="#1a7f37">chosen</text>
+<rect x="150" y="240" width="139" height="26" fill="#0969da"/>
+<text x="130" y="258" text-anchor="end" font-size="12" fill="#24292f">r3</text>
+<text x="298" y="258" font-size="11" fill="#57606a">1.05</text>
+<rect x="150" y="284" width="120" height="26" fill="#0969da"/>
+<text x="130" y="302" text-anchor="end" font-size="12" fill="#24292f">r4</text>
+<text x="279" y="302" font-size="11" fill="#57606a">0.86</text>
+<rect x="150" y="328" width="77" height="26" fill="#0969da"/>
+<text x="130" y="346" text-anchor="end" font-size="12" fill="#24292f">r5</text>
+<text x="236" y="346" font-size="11" fill="#57606a">0.42</text>
+<rect x="150" y="372" width="55" height="26" fill="#0969da"/>
+<text x="130" y="390" text-anchor="end" font-size="12" fill="#24292f">r6</text>
+<text x="214" y="390" font-size="11" fill="#57606a">0.20</text>
+<rect x="150" y="416" width="42" height="26" fill="#0969da"/>
+<text x="130" y="434" text-anchor="end" font-size="12" fill="#24292f">r7</text>
+<text x="201" y="434" font-size="11" fill="#57606a">0.07</text>
+<rect x="150" y="460" width="29" height="26" fill="#8c959f"/>
+<text x="130" y="478" text-anchor="end" font-size="12" fill="#24292f">r8</text>
+<text x="188" y="478" font-size="11" fill="#57606a">-0.06</text>
+<rect x="150" y="504" width="2" height="26" fill="#8c959f"/>
+<text x="130" y="522" text-anchor="end" font-size="12" fill="#24292f">r9</text>
+<text x="162" y="522" font-size="11" fill="#57606a">-0.35</text>
+</svg>

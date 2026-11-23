@@ -1,4 +1,4 @@
-"""Regen-diff gate: generated figs 8-12 must match the banked SVGs.
+"""Regen-diff gate: generated figs 8-12 plus L1 13a-d must match banked SVGs.
 
 Change a pinned constant -> rerun the builders -> commit the SVGs,
 same task. This test enforces that workflow via the figures.py CLI.

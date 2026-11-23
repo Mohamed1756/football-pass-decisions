@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 252" role="img">
+<title>Freeze schematic</title>
+<pattern id="hatch" width="8" height="8" patternUnits="userSpaceOnUse"><path d="M0,8 L8,0" stroke="#8c959f" stroke-width="1.5"/></pattern>
+<text x="150" y="30" font-size="16" fill="#24292f">Freeze: safest-first outlet stack</text>
+<text x="150" y="52" font-size="12" fill="#57606a">SYNTH -1 none · zone mid · ctrl False · hold None/None · hash fa754eadc587 · SYNTHETIC</text>
+<text x="150" y="72" font-size="12" fill="#57606a">n=3 viable=0 entropy=0.00 bits · pre_press=None pre_sep=None · Δpress=None</text>
+<line x1="600" y1="90" x2="600" y2="232" stroke="#cf222e" stroke-width="1.5" stroke-dasharray="5 4"/>
+<text x="604" y="84" font-size="11" fill="#cf222e">τ=0.0 viable →</text>
+<rect x="150" y="108" width="450" height="26" fill="url(#hatch)" stroke="#8c959f"/>
+<text x="130" y="126" text-anchor="end" font-size="12" fill="#24292f">r0</text>
+<text x="162" y="126" font-size="11" fill="#57606a">-99.00</text>
+<rect x="150" y="152" width="450" height="26" fill="url(#hatch)" stroke="#8c959f"/>
+<text x="130" y="170" text-anchor="end" font-size="12" fill="#24292f">r1</text>
+<text x="162" y="170" font-size="11" fill="#57606a">-99.00</text>
+<rect x="150" y="196" width="450" height="26" fill="url(#hatch)" stroke="#8c959f"/>
+<text x="130" y="214" text-anchor="end" font-size="12" fill="#24292f">r2</text>
+<text x="162" y="214" font-size="11" fill="#57606a">-99.00</text>
+<text x="150" y="228" font-size="12" fill="#57606a">risk=None · unscorable freeze, never a margin</text>
+</svg>
