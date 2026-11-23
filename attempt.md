@@ -54,6 +54,10 @@ leads at T=2 and T=4 as well (pass-within-T 0.503/0.806 all receptions,
   783 s, 61 rows above 30 s. Median is robust (2.16 down to 2.04
   trimming above 30 s); the mean and exit shares are not trustworthy
   as possession durations.
+- Choice load carries no timing signal either: joining the banked
+  choice sets shows |corr| < 0.10 of hold with viable size and
+  effective options, bin medians flat 2.04–2.52 s
+  (test_load_hold). Load predicts which outlet, not when the ball moves.
 
 ## What the fit banked
 

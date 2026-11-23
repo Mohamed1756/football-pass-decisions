@@ -137,6 +137,23 @@ Both sides race to the ball-to-runner intercept.
   instrument (learned completion model vs arrival cushion); their low ICC
   corroborates our passer-trait null (corr ~0.01) without confirming it.
 
+## Psychometric tried, not banked
+
+Noisy-race form `P(fail|m) = logistic((τ−m)/σ)`, MLE on the 41,561
+WC2022 rows (`scripts/fit_psychometric.py`, 2×2 Newton): τ = −0.07 s,
+σ = 0.56 s. The threshold lands on the physical viability line —
+the story's one confirmed prediction. The shape fails around it:
+predictive NLL loses to the pinned decile lookup on WC2022 in-sample
+and on all three held-out men leagues (Euro2020 −65, LaLiga −47,
+Euro2024 −70 nats; gap sits on viable rows, not just the tail), and
+the lower asymptote contradicts behavior directly (chosen
+non-viable margins fail at 0.30–0.34 everywhere; the form predicts
+~0.8+). Execution rescues balls the margin calls dead — or frozen
+margins mismeasure tight balls, same thing: σ absorbs model error
+worst where it matters. No banked function; `decile_risk` stays the
+only risk lookup. Pace-constraint follow-up (universal τ, σ per
+environment) not run — moot until the base form earns its slot.
+
 ## Open priors (fitted, not proven)
 
 - Constant 22 m/s strike for all distances. Distance-band grid on the WC2022

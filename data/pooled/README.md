@@ -1,22 +1,28 @@
 # Pooled evidence: what the files are and what regenerates them
 
 Three reproducibility classes — "regenerate from the loaders" below
-means you could write a script, not that one is banked. Exactly one
-pool-writing command exists in-repo (`scripts/label_retention.py`).
+means you could write a script, not that one is banked. Three
+pool-writing commands exist in-repo (`scripts/label_retention.py`,
+`scripts/label_choice_sets.py`, `scripts/label_360_choice_sets.py`).
 
-- Reproducible by command: `idsse_retention_labeled.pkl` only, via
-  `python3 scripts/label_retention.py` given the 7 raw matches at
-  `/tmp/idsse_raw` (HuggingFace `pysport/idsse-data`, re-downloadable;
-  ~2 min, 400 MB XML, not vendored). Run on demand, not in CI.
-  Re-ran 2026-11-20: 1,160/1,160 rows dict-identical, byte-identical
-  (CPython 3.13.1, pickle protocol 4). Byte-identity is
+- Reproducible by command: `idsse_retention_labeled.pkl` via
+  `python3 scripts/label_retention.py`, `idsse_choice_sets_labeled.pkl`
+  via `python3 scripts/label_choice_sets.py`, and
+  `sb360_laliga_choice_sets.pkl` via `python3 scripts/label_360_choice_sets.py`.
+  The IDSSE pair needs the 7 raw matches at `/tmp/idsse_raw` (HuggingFace
+  `pysport/idsse-data`, re-downloadable; ~2 min each, 2.6 GB XML, not
+  vendored); the 360 pool needs the 35 LaLiga match JSON pairs in
+  `/tmp/sb360_1190` (StatsBomb Open Data, fetchable; ~460 MB, not
+  vendored). Run on demand, not in CI.
+  Retention re-ran 2026-11-20: 1,160/1,160 rows dict-identical,
+  byte-identical (CPython 3.13.1, pickle protocol 4). Byte-identity is
   stack-conditional; content identity is the portable claim.
 - Loader-startable but unscripted: the six `idsse_*` measurement pools,
   the three `skillcorner_*` pools, and `value_choice_by_passer.pkl`.
   Loaders exist in `src/io/` (plus the repo test fixtures' hand
   slices), but each pool also needs unbanked logic on top (team join +
-  live-presser margins, full-pitch choice-set aggregation,
-  drag-rematch extraction): no banking script is banked for any of them.
+  live-presser margins, drag-rematch extraction): no banking script is
+  banked for any of them.
 - Frozen reference inputs: `frozen_five_leagues.pkl` — no StatsBomb
   360 loader exists here. Kept auditable by the counts and edge
   values printed below; LOLO pins the artifact, not a regenerable
@@ -39,6 +45,7 @@ The scoring rule that bins everything (WC2022 edges) is the literal
 | `idsse_pooled7.pkl` | 631 (margin, outcome) | Same, alternate cut; kept for audit |
 | `value_choice_by_passer.pkl` | 124 passers: name → [n, rank0_choices, value_choices, completions, total_outlets] (51 with n≥5 drive the null: rank-0 choice 0.00–0.25, completion 0.60–1.00, value/completion corr 0.02) | Value-added null |
 | `idsse_retention_labeled.pkl` | 1,160 dict rows: match/target/passer keys, margin, t_ball, cushion, marking, controlled, recept x/y, delta press+compact, pre press+sep-vel, hold duration+exit. 659 controlled, 1,159 with full −5 s, all with +3 s. Only `pre_*` nullable (1 row, incomplete −5 s track; profile pinned in `test_pool_none_profile_pinned`). Banked by `scripts/label_retention.py` from 7 raw matches (HuggingFace `pysport/idsse-data`, re-downloadable). Keys: `recept_x_m`, `recept_y_m`, `delta_press_m`, `delta_compact_m`, `pre_press_m`, `pre_sep_vel`, `hold_s`, `hold_exit` | Gates 4–5 + freeze + attempt: shifted exp wins (NLL 782.6 vs null 793.3); structure press −0.83 / compact −0.72; hold median 2.16 s; pre-freeze press 5.5–7.2 |
+| `sb360_laliga_choice_sets.pkl` | 26,906 dict rows, 35 matches (LaLiga 2020/21 open data): per-freeze in-frame choice sets with frozen margins, chosen outlet by nearest-to-end (verify_ok 64%, p50 3.8 m), value per viable outlet with territory attack sign (89 cells kept, 51 ambiguous dropped). Banked by `scripts/label_360_choice_sets.py`; needs the two raw JSON kinds per match (~460 MB total). | Gate-2 scale test: load gradient 0.47 → 0.14 monotone; set-size top-2 0.674 → 0.673 on ≥3 outlets (mechanical mass 105 rows); chosen rank-0 0.431, matching the 0.41–0.44 headline; value-rank-0 0.356 vs margin-rank-0 0.429 (identity does not replicate); linear beats value-Luce OOS (−25,183 vs −26,435) |
 
 Superseded cuts are marked, not deleted: early notes cite their numbers.
 

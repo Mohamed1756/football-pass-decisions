@@ -33,8 +33,12 @@ label_retention.py run, forwards. Pinned in test_structure_fit.
   convergence over 3 s is partly the window, not the pass. Window
   options needing raw (shorten to +1.5 s, censor at next event) wait
   for the re-bank; the +3 s deltas stay, relabeled descriptive.
-- Open-man counts cut on both sides: +0.01 to +0.21 everywhere —
-  repositioning without separation, noise with a name.
+- Level-dependence: median and q90 delta both fall with receipt-frame
+  press access (persistence ρ ≈ 0.4–0.7 across all six zone×control
+  cells, Oldham-corrected null −1; `scripts/diag_reversion_level.py`,
+  raw read, nothing banked). Part of att's −2.52 convergence is
+  starting open, not attacking shape resolving — the cell means
+  average over different starting levels.
 
 ## Killed paths
 

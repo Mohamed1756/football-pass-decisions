@@ -102,15 +102,21 @@ Labels, window, and sample behind the calibration above:
 ## Facing: measurable, but coarsely
 
 - `facing_rad` is set in tests only; all three loaders emit unknown, so
-  the whole hip-pivot path has zero real-data coverage. The unlock is
+  the whole hip-pivot path has zero real-data coverage. The unlock was
   inside a source already cited: SkillCorner ships 3D body pose (29
   joints) for 2 matches — shoulders+hips normal gives `facing_rad`,
   and the `facing_source` provenance field already exists to carry it.
-- Error budget caps the use: pose→orientation validates at 27.7°
-  median error vs EPTS (Arbués-Sangüesa et al., Barça/UPF
-  2020) — same width as the 35° open-hip boundary. Coarsen to
-  open/needs-turn binary until pose error drops; the full curve on
-  noisy facing is fiction with error bars.
+- Broadcast testbed tried first, failed on testbed grounds, not on facing:
+  on the 2 pose matches (1,100 labeled receptions, detected-only tracks),
+  cushions barely order control with or without pose (AUC 0.541 floor vs
+  0.542 receiver-facing vs 0.543 full-pose; q1 fitted 0.000 throughout —
+  long-flight cushions floor the IDSSE-fit curve). Pose moved nothing
+  because the base instrument is near-chance there, not because facing
+  is irrelevant. Coarsen to open/needs-turn binary before trusting any
+  angle; the full curve on noisy facing is fiction with error bars.
+  Loader (`src/io/pose.py`) stays as tested utility; the unlock still
+  waits on IDSSE-grade tracks with pose, which no cited source pairs
+  today. `scripts/diag_pose_bias.py` is the record.
 - 360 carries ordering only: no fitted retention levels apply (live
   marking uncomputable, double floor uncorrected there) — cushion
   rank still orders, same portability argument as gate 3.

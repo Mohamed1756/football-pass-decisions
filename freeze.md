@@ -4,15 +4,17 @@
 like before the pass. Pre-freeze descriptors banked on 1,160 rows;
 the loop-closure test nulled.)
 
-The freeze gate 3 scores: press access and separation velocity
-at t=0, measured over the 5 s of off-ball movement that produced
-the choice set. Gate 0 describes freezes; it doesn't rate them —
+The freeze gate 3 scores: press access, separation velocity, and
+affordance volume at t=0. The shape pair is measured over the 5 s of
+off-ball movement that produced the choice set; affordance is a state
+over that set. Gate 0 describes freezes; it doesn't rate them —
 no good/bad, no value function, no table link. Open-man counts cut:
 repositioning without separation, noise with a name. Pipeline
 position: freeze(0) → arrival(3) → control(4) → hold(1) → resolution(5).
-Gate 0 abuts gate 3 (its outputs are gate 3's inputs); it does not
-feed gate 1 directly — hold timing is independent of pre-freeze
-shape (pinned null in test_hold_freeze_null).
+Gate 0 abuts gate 3 (shape outputs are gate 3's inputs; affordance
+reuses the gate-3 scorer frozen over the full set); it does not
+feed gate 1 directly — hold timing is independent of press/separation
+shape and of choice load (nulls in test_hold_freeze_null and test_load_hold).
 ## What it measures
 
 - Press access at freeze: nearest-opponent distance to ball at t=0.
@@ -21,9 +23,30 @@ shape (pinned null in test_hold_freeze_null).
   to the final shape. Positive = men getting opener into the freeze.
   The one component gate 5 has no mirror for — formation is a
   derivative, resolution is a state.
+- Affordance volume: viable-set size plus margin entropy over the
+  frozen choice-set margins at t=0 (`affordance_volume` in
+  `src/models/formation/mechanism.py`, threshold τ = 0.0 — viable-chosen
+  takes rank 0 at the headline rate in every league,
+  test_choice_viability). State over the outlet set, complementing the
+  shape pair. Same gate-0 status: describes the freeze, rates nothing.
+Per-freeze full sets banked separately by scripts/label_choice_sets.py
+(`data/pooled/idsse_choice_sets_labeled.pkl`, n=1,160, frozen margins):
+mean 9.9 outlets, 8.6 viable, effective 7.1; rank-0 share falls
+0.53 → 0.08 across viable-size bins, monotone (test_choice_sets_table).
 
-Banked on all 1,160 rows (1,159 with full −5 s tracks), same
-label_retention.py run, backwards. Pinned in test_formation_table (means) and test_formation_transition (null loop).
+## Schematic grammar (L1, `scripts/freeze_schematic.py`, figs 13a–d)
+
+One SVG per pinned freeze, banked fields only. Vertical outlet stack,
+rank 0 top; bar length ∝ margin; rank label left; dashed τ line down
+the stack (right of it = viable). Chosen outlet ringed green; best
+unchosen hollow-marked (regret readable at a glance: ring below the top
+slot). Header carries zone, control, hold + exit, n/n_v/effective,
+pre-press/sep-vel, Δpress. Degenerate states drawn, never hidden:
+singleton slot + "counted, never scored" tag; unscorable hatched stack
++ risk=None tag. No coordinates, no motion — time appears as text.
+Four rows: median mid set (J03WN1), tail loosen Δpress +18.38 (J03WR9),
+smallest set nv=3 (J03WMX), synthetic unscorable (grammar demo only).
+Pinned in test_freeze_schematic; drift enforced by the figures gate.
 
 ## Loop test (nulled)
 
