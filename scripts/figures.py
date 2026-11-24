@@ -306,10 +306,20 @@ def choice_shares() -> str:
     return "\n".join(parts)
 
 
-if __name__ == "__main__":
+def check_all(builders, paths):
+    """Rebuild every figure in memory; return paths that drifted."""
     import pathlib
-    import sys
 
+    return [
+        path
+        for key, build in builders.items()
+        for path in [paths[key]]
+        if pathlib.Path(path).read_text() != build()
+    ]
+
+
+if __name__ == "__main__":
+    import sys
     from freeze_schematic import (
         build_median as build_l1_median,
         build_smallest as build_l1_smallest,
@@ -340,17 +350,14 @@ if __name__ == "__main__":
         "l1_unscorable": "docs/figs/fig13_freeze_unscorable.svg",
     }
     name = sys.argv[1] if len(sys.argv) > 1 else "retention"
+    # Regen-diff gate: rebuild all nine in memory, fail on drift.
+    # Change a pin -> rerun builders -> commit SVGs, same task.
+    drifted = check_all(builders, paths) if name == "check" else []
+    if drifted:
+        print("drifted figures (rerun builders and commit):")
+        print("\n".join(drifted))
+        sys.exit(1)
     if name == "check":
-        # Regen-diff gate: rebuild all nine in memory, fail on drift.
-        # Change a pin -> rerun builders -> commit SVGs, same task.
-        drifted = []
-        for key, build in builders.items():
-            if pathlib.Path(paths[key]).read_text() != build():
-                drifted.append(paths[key])
-        if drifted:
-            print("drifted figures (rerun builders and commit):")
-            print("\n".join(drifted))
-            sys.exit(1)
         print("figures match banked")
     else:
         svg = builders[name]()
