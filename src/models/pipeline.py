@@ -35,6 +35,23 @@ class OutletValue:
     best_presser_id: Optional[int]
     marking_dist_m: float
 
+    def describe(self) -> str:
+        """One plain line per number, no jargon.
+
+        Same values as the fields; written for someone running the
+        snippet, not for calibration. Risk uses the fitted decile
+        rate at unit pace, matching the banked tables.
+        """
+        lines = [f"margin: {self.margin_s:.2f}s (ball beats the press)"]
+        if self.risk is not None:
+            lines.append(f"fail rate at this tightness: {self.risk:.0%}")
+        lines += [
+            f"control: {self.control_prob:.0%}",
+            f"loosening when controlled: {self.loosen_prob_given_control:.0%}",
+            f"value: {self.value:.3f} (sticks and breaks shape)",
+        ]
+        return "\n".join(lines)
+
 
 def run_outlet(
     receiver: PressingActor,

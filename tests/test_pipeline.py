@@ -34,3 +34,15 @@ def test_run_outlet_unscorable_propagates():
         and out.loosen_prob_given_control == 0.0
         and out.value == 0.0
     )
+
+
+def test_describe_says_the_same_numbers():
+    rec = PressingActor(track_id=9, team_id="own", pos_m=PitchPoint(86.0, 25.0))
+    opp = PressingActor(track_id=1, team_id="opp", pos_m=PitchPoint(87.5, 26.5))
+    out = run_outlet(rec, [opp], PitchPoint(100.0, 29.0), source="tracking")
+    text = out.describe()
+    assert f"{out.margin_s:.2f}" in text
+    assert f"{out.control_prob:.0%}" in text
+    assert f"{out.loosen_prob_given_control:.0%}" in text
+    assert f"{out.value:.3f}" in text
+    assert "decile" not in text and "cushion" not in text
