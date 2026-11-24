@@ -1,4 +1,4 @@
-# Football Passing Chain
+# Football Pass Decisions: scoring passing choices from open tracking data
 
 Open play in football is continuous. Tracking cameras record the movement, but the flow never pauses for scoring. This project cuts it into discrete stop-start states: the freeze as state, the hold as time, the pass choice as decision, each scored so identical inputs give identical numbers.
 
